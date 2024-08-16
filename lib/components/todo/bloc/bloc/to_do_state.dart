@@ -1,12 +1,21 @@
 part of 'to_do_bloc.dart';
 
-enum status { initial, success, failire, loading }
+enum ToDoStatus { initial, success, failire, loading }
 
-sealed class ToDoState extends Equatable {
-  const ToDoState();
+final class ToDoState extends Equatable {
+  const ToDoState({
+    this.status = ToDoStatus.initial,
+    this.toDoItems = const <ToDoModel>[],
+  });
+
+  final List<ToDoModel> toDoItems;
+  final ToDoStatus status;
+
+  ToDoState copyWith({ToDoStatus? status, List<ToDoModel>? toDoItems}) {
+    return ToDoState(
+        status: status ?? this.status, toDoItems: toDoItems ?? this.toDoItems);
+  }
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [toDoItems, status];
 }
-
-final class ToDoInitial extends ToDoState {}

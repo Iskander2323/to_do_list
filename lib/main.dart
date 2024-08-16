@@ -4,5 +4,5 @@ import 'package:test_project/components/todo/repository/todo_repository.dart';
 
 void main() {
   TodoRepository todoRepository = TodoRepository();
-  runApp(App(todoRepository: todoRepository));
+  runApp(App(toDoRepository: todoRepository));
 }
