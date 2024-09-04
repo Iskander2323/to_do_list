@@ -1,13 +1,29 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:test_project/components/todo/data/model/todo_model.dart';
+import 'package:test_project/components/todo/repository/todo_repository.dart';
 
 part 'form_to_do_event.dart';
 part 'form_to_do_state.dart';
 
 class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
-  FormToDoBloc() : super(FormToDoInitial()) {
-    on<FormToDoEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+  final TodoRepository _toDoRepository;
+
+  FormToDoBloc({required TodoRepository toDoRepository})
+      : _toDoRepository = toDoRepository,
+        super(FormToDoInitial()) {
+    on<FormToDoEvent>((event, emit) {});
+    on<CreateToDoEvent>(_createToDo);
+  }
+
+  Future<void> _createToDo(
+      CreateToDoEvent event, Emitter<FormToDoState> emit) async {
+    final ToDoModel toDoModel = ToDoModel(
+        id: 0,
+        title: event.taskTitle,
+        description: event.description,
+        isCompleted: false);
+
+    _toDoRepository.insertOrUpdate(toDoModel);
   }
 }

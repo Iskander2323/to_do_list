@@ -9,6 +9,7 @@ class TodoRepository {
 
   Future<void> insertOrUpdate(ToDoModel toDoItem) async {
     final toDoItemCompanion = toDoItem.toToDoCompanion();
+    //TODO fix this bug
     await database.insertOrUpdateToDo(toDoItemCompanion);
   }
 }

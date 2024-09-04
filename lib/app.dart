@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_project/components/form_to_do/bloc/form_to_do_bloc.dart';
 import 'package:test_project/components/todo/bloc/bloc/to_do_bloc.dart';
 import 'package:test_project/components/todo/repository/todo_repository.dart';
 import 'package:test_project/routes.dart';
@@ -14,7 +15,9 @@ class App extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         BlocProvider(
-            create: (context) => ToDoBloc(toDoRepository: toDoRepository))
+            create: (context) => ToDoBloc(toDoRepository: toDoRepository)),
+        BlocProvider(
+            create: (context) => FormToDoBloc(toDoRepository: toDoRepository))
       ],
       child: MaterialApp.router(
         title: 'Flutter Demo',

@@ -47,6 +47,7 @@ class AppDatabase extends _$AppDatabase {
       if (isRecordExist == null) {
         try {
           await database.into(todoItems).insert(toDoItemCompanion);
+          log('CREATED SUCCESSFULLY');
         } on Exception catch (e) {
           log(e.toString());
         }

@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_project/components/form_to_do/bloc/form_to_do_bloc.dart';
 
 class FormToDoPage extends StatefulWidget {
   const FormToDoPage({super.key});
@@ -21,6 +25,21 @@ class _FormToDoPageState extends State<FormToDoPage> {
             color: Colors.white,
           ),
         ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                final title = titleController.text;
+                final description = descriptionController.text;
+                log(title);
+                log(description);
+                context.read<FormToDoBloc>().add(CreateToDoEvent(
+                    taskTitle: title, description: description));
+              },
+              child: Text(
+                'CREATE',
+                style: TextStyle(color: Colors.white),
+              ))
+        ],
         backgroundColor: const Color.fromARGB(255, 105, 39, 176),
       ),
       backgroundColor: const Color.fromARGB(255, 105, 39, 176),
@@ -42,12 +61,13 @@ class _FormToDoPageState extends State<FormToDoPage> {
                         Container(
                           color: const Color.fromARGB(255, 58, 18, 83),
                           child: TextField(
+                            controller: titleController,
                             style: TextStyle(
                                 color: Color.fromARGB(255, 216, 142, 205)),
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 5),
-                                fillColor: Color.fromARGB(255, 216, 142, 205),
+                                labelText: 'Task Title',
                                 labelStyle: TextStyle(
                                     color: const Color.fromARGB(
                                         255, 216, 142, 205))),
@@ -56,13 +76,16 @@ class _FormToDoPageState extends State<FormToDoPage> {
                         Container(
                           color: const Color.fromARGB(255, 58, 18, 83),
                           child: TextField(
+                            controller: descriptionController,
                             maxLines: null,
                             minLines: 3,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 216, 142, 205),
+                            ),
                             decoration: InputDecoration(
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 10),
                                 alignLabelWithHint: true,
-                                fillColor: Color.fromARGB(255, 216, 142, 205),
                                 labelText: 'Notes',
                                 labelStyle: TextStyle(
                                     color: const Color.fromARGB(

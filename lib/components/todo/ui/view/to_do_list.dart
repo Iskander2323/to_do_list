@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_project/components/todo/bloc/bloc/to_do_bloc.dart';
 import 'package:test_project/components/todo/ui/view/to_do_item.dart';
-import 'package:test_project/routes.dart';
 
 class ToDoList extends StatefulWidget {
   const ToDoList({super.key});

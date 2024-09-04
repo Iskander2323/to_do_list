@@ -7,14 +7,14 @@ sealed class ToDoEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ToDoFetched extends ToDoEvent {}
+final class ToDoFetched extends ToDoEvent {}
 
-class AddToDo extends ToDoEvent {
+final class AddToDo extends ToDoEvent {
   const AddToDo({required this.title, required this.description});
   final String title;
   final String description;
 }
 
-class EditToDo extends ToDoEvent {}
+final class EditToDo extends ToDoEvent {}
 
-class DeleteToDo extends ToDoEvent {}
+final class DeleteToDo extends ToDoEvent {}
