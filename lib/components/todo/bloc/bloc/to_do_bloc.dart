@@ -20,12 +20,11 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
       ToDoFetched event, Emitter<ToDoState> emit) async {
     try {
       if (state.status == ToDoStatus.initial) {
-        log('HERE');
         final toDoItems = await _toDoRepository.getToDoAll();
+        log(toDoItems.toString());
         return emit(
             state.copyWith(status: ToDoStatus.success, toDoItems: toDoItems));
       }
-      log('HERE');
     } catch (e) {
       log(e.toString(), name: "FROM TODOBLOC");
     }

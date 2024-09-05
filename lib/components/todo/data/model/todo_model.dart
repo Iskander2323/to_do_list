@@ -20,6 +20,7 @@ class ToDoModel extends Equatable {
     final descriptionCompanion = Value<String?>(description);
     final isCompletedCompanion = Value<bool>(isCompleted);
     return TodoItemsCompanion(
+      id: const Value<int>(0),
       title: titleCompanion,
       description: descriptionCompanion,
       isCompleted: isCompletedCompanion,

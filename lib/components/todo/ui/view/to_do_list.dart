@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -32,6 +34,7 @@ class _ToDoListState extends State<ToDoList> {
                 return const Center(child: Text('ERROR'));
               case ToDoStatus.success:
                 if (state.toDoItems.isNotEmpty) {
+                  log('IS IT HERE');
                   final body = Container(
                     width: contrains.maxWidth,
                     height: contrains.maxHeight,

@@ -14,7 +14,7 @@ part 'local_db.g.dart';
 
 class TodoItems extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get title => text().withLength(min: 6)();
+  TextColumn get title => text().withLength()();
   TextColumn get description => text().nullable()();
   BoolColumn get isCompleted => boolean()();
 }

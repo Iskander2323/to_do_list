@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_project/components/form_to_do/bloc/form_to_do_bloc.dart';
@@ -30,10 +28,9 @@ class _FormToDoPageState extends State<FormToDoPage> {
               onPressed: () {
                 final title = titleController.text;
                 final description = descriptionController.text;
-                log(title);
-                log(description);
                 context.read<FormToDoBloc>().add(CreateToDoEvent(
                     taskTitle: title, description: description));
+                Navigator.pop(context);
               },
               child: Text(
                 'CREATE',
