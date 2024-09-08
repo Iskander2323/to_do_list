@@ -15,6 +15,12 @@ final class AddToDo extends ToDoEvent {
   final String description;
 }
 
+final class UpdateToDoStatus extends ToDoEvent {
+  const UpdateToDoStatus({required this.toDoId, required this.isDone});
+  final int toDoId;
+  final bool isDone;
+}
+
 final class EditToDo extends ToDoEvent {}
 
 final class DeleteToDo extends ToDoEvent {}

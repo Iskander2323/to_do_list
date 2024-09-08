@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_project/components/todo/bloc/bloc/to_do_bloc.dart';
 import 'package:test_project/components/todo/data/model/todo_model.dart';
 
 class ToDoItem extends StatefulWidget {
@@ -23,7 +25,15 @@ class _ToDoItemState extends State<ToDoItem> {
               color: widget.todoItem.isCompleted
                   ? Colors.greenAccent
                   : Colors.orangeAccent,
-              child: IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+              child: IconButton(
+                  onPressed: () {
+                    final isDone = !widget.todoItem.isCompleted;
+                    context.read<ToDoBloc>().add(UpdateToDoStatus(
+                          toDoId: widget.todoItem.id,
+                          isDone: isDone,
+                        ));
+                  },
+                  icon: Icon(Icons.add)),
             ),
           ),
           Container(

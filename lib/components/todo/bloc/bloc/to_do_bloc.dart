@@ -29,4 +29,9 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
       log(e.toString(), name: "FROM TODOBLOC");
     }
   }
+
+  Future<void> _UpdateToDoStatus(
+      UpdateToDoStatus event, Emitter<ToDoState> emit) async {
+    try {} catch (e) {}
+  }
 }

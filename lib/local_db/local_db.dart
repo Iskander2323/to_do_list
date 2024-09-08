@@ -14,12 +14,27 @@ part 'local_db.g.dart';
 
 class TodoItems extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get title => text().withLength()();
+  TextColumn get title => text()();
   TextColumn get description => text().nullable()();
+  TextColumn get difficulty => textEnum()();
   BoolColumn get isCompleted => boolean()();
+  DateTimeColumn get deadLine => dateTime()();
+  DateTimeColumn get createdTime => dateTime()();
 }
 
-@DriftDatabase(tables: [TodoItems])
+class ReminderTime extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get toDoItemId => integer().references(TodoItems, #id)();
+  DateTimeColumn get remindTime => dateTime()();
+}
+
+class CheckList extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get toDoItemId => integer().references(TodoItem, #id)();
+  TextColumn get title => text()();
+}
+
+@DriftDatabase(tables: [TodoItems, ReminderTime])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
   @override
@@ -39,6 +54,33 @@ class AppDatabase extends _$AppDatabase {
     return result;
   }
 
+  Future<void> insertReminderTime(int toDoItemId, DateTime remindTime) async {
+    try {
+      await database.into(reminderTime).insert(ReminderTimeCompanion(
+            id: const Value<int>(0),
+            toDoItemId: Value<int>(toDoItemId),
+            remindTime: Value<DateTime>(remindTime),
+          ));
+    } on Exception catch (e) {
+      log(e.toString(), name: 'FROM INSERT REMINDER');
+    }
+  }
+
+  Future<void> insertCheckList(int toDoItemId, String checkListText) async {
+    try {} on Exception catch (e) {
+      log(e.toString(), name: 'FROM INSERT CHECKLISTTEXT');
+    }
+  }
+
+  Future<void> updateToDoStatus(int id, bool isDone) async {
+    try {
+      await (update(todoItems)..where((tbl) => tbl.id.equals(id)))
+          .write(TodoItemsCompanion(isCompleted: Value<bool>(isDone)));
+    } on Exception catch (e) {
+      log(e.toString(), name: 'FROM UPDATE TODOSTATUS');
+    }
+  }
+
   Future<void> insertOrUpdateToDo(TodoItemsCompanion toDoItemCompanion) async {
     try {
       final isRecordExist = await (select(todoItems)
@@ -47,7 +89,6 @@ class AppDatabase extends _$AppDatabase {
       if (isRecordExist == null) {
         try {
           await database.into(todoItems).insert(toDoItemCompanion);
-          log('CREATED SUCCESSFULLY');
         } on Exception catch (e) {
           log(e.toString());
         }

@@ -34,7 +34,7 @@ class _ToDoListState extends State<ToDoList> {
                 return const Center(child: Text('ERROR'));
               case ToDoStatus.success:
                 if (state.toDoItems.isNotEmpty) {
-                  log('IS IT HERE');
+                  log('IS NOT EMPTY');
                   final body = Container(
                     width: contrains.maxWidth,
                     height: contrains.maxHeight,
@@ -46,22 +46,29 @@ class _ToDoListState extends State<ToDoList> {
                           width: 100,
                           height: 100,
                           child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.add_a_photo_rounded),
+                            onPressed: () {
+                              context.goNamed('FormFields');
+                            },
+                            icon: Icon(Icons.add),
                             color: Colors.red,
                           ),
                         ),
-                        ListView.builder(
-                          itemBuilder: (context, index) {
-                            return ToDoItem(todoItem: state.toDoItems[index]);
-                          },
-                          itemCount: state.toDoItems.length,
+                        SizedBox(
+                          width: contrains.maxWidth,
+                          height: contrains.maxHeight * 0.5,
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              return ToDoItem(todoItem: state.toDoItems[index]);
+                            },
+                            itemCount: state.toDoItems.length,
+                          ),
                         ),
                       ],
                     ),
                   );
                   return body;
                 } else {
+                  log('IS EMPTY');
                   return Container(
                       child: Column(
                     children: [
