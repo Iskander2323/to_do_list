@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
+import 'package:test_project/components/todo/data/model/check_list_item_model.dart';
 import 'package:test_project/components/todo/data/model/todo_model.dart';
 import 'package:test_project/local_db/globals.dart';
 
@@ -16,7 +17,7 @@ class TodoItems extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
   TextColumn get description => text().nullable()();
-  TextColumn get difficulty => textEnum()();
+  TextColumn get difficulty => textEnum<Difficulty>()();
   BoolColumn get isCompleted => boolean()();
   DateTimeColumn get deadLine => dateTime()();
   DateTimeColumn get createdTime => dateTime()();
@@ -30,11 +31,12 @@ class ReminderTime extends Table {
 
 class CheckList extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get toDoItemId => integer().references(TodoItem, #id)();
+  IntColumn get toDoItemId => integer().references(TodoItems, #id)();
   TextColumn get title => text()();
+  BoolColumn get isCompleted => boolean()();
 }
 
-@DriftDatabase(tables: [TodoItems, ReminderTime])
+@DriftDatabase(tables: [TodoItems, ReminderTime, CheckList])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
   @override
@@ -49,8 +51,22 @@ class AppDatabase extends _$AppDatabase {
     }
     final result = <ToDoModel>[];
     for (var toDoItem in toDoItems) {
-      result.add(ToDoModel.fromLocal(toDoItem));
+      result.add(ToDoModel.fromLocal(
+        toDoItem,
+      ));
     }
+    return result;
+  }
+
+  Future<List<CheckListItemModel>> getCheckList(int id) async {
+    var checkLocalList = [];
+    try {
+      checkLocalList = await (select(checkList)
+            ..where((tbl) => tbl.toDoItemId.equals(id)))
+          .get();
+    } catch (e) {}
+    final result = <CheckListItemModel>[];
+    for (var element in checkLocalList) {}
     return result;
   }
 

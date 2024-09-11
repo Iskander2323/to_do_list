@@ -32,10 +32,10 @@ class $TodoItemsTable extends TodoItems
   static const VerificationMeta _difficultyMeta =
       const VerificationMeta('difficulty');
   @override
-  late final GeneratedColumnWithTypeConverter<Enum, String> difficulty =
+  late final GeneratedColumnWithTypeConverter<Difficulty, String> difficulty =
       GeneratedColumn<String>('difficulty', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<Enum>($TodoItemsTable.$converterdifficulty);
+          .withConverter<Difficulty>($TodoItemsTable.$converterdifficulty);
   static const VerificationMeta _isCompletedMeta =
       const VerificationMeta('isCompleted');
   @override
@@ -140,15 +140,15 @@ class $TodoItemsTable extends TodoItems
     return $TodoItemsTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<Enum, String, String> $converterdifficulty =
-      const EnumNameConverter<Enum>(Enum.values);
+  static JsonTypeConverter2<Difficulty, String, String> $converterdifficulty =
+      const EnumNameConverter<Difficulty>(Difficulty.values);
 }
 
 class TodoItem extends DataClass implements Insertable<TodoItem> {
   final int id;
   final String title;
   final String? description;
-  final Enum difficulty;
+  final Difficulty difficulty;
   final bool isCompleted;
   final DateTime deadLine;
   final DateTime createdTime;
@@ -225,7 +225,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           {int? id,
           String? title,
           Value<String?> description = const Value.absent(),
-          Enum? difficulty,
+          Difficulty? difficulty,
           bool? isCompleted,
           DateTime? deadLine,
           DateTime? createdTime}) =>
@@ -288,7 +288,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
   final Value<int> id;
   final Value<String> title;
   final Value<String?> description;
-  final Value<Enum> difficulty;
+  final Value<Difficulty> difficulty;
   final Value<bool> isCompleted;
   final Value<DateTime> deadLine;
   final Value<DateTime> createdTime;
@@ -305,7 +305,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     this.id = const Value.absent(),
     required String title,
     this.description = const Value.absent(),
-    required Enum difficulty,
+    required Difficulty difficulty,
     required bool isCompleted,
     required DateTime deadLine,
     required DateTime createdTime,
@@ -338,7 +338,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
       {Value<int>? id,
       Value<String>? title,
       Value<String?>? description,
-      Value<Enum>? difficulty,
+      Value<Difficulty>? difficulty,
       Value<bool>? isCompleted,
       Value<DateTime>? deadLine,
       Value<DateTime>? createdTime}) {
@@ -623,23 +623,294 @@ class ReminderTimeCompanion extends UpdateCompanion<ReminderTimeData> {
   }
 }
 
+class $CheckListTable extends CheckList
+    with TableInfo<$CheckListTable, CheckListData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CheckListTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _toDoItemIdMeta =
+      const VerificationMeta('toDoItemId');
+  @override
+  late final GeneratedColumn<int> toDoItemId = GeneratedColumn<int>(
+      'to_do_item_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES todo_items (id)'));
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isCompletedMeta =
+      const VerificationMeta('isCompleted');
+  @override
+  late final GeneratedColumn<bool> isCompleted = GeneratedColumn<bool>(
+      'is_completed', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_completed" IN (0, 1))'));
+  @override
+  List<GeneratedColumn> get $columns => [id, toDoItemId, title, isCompleted];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'check_list';
+  @override
+  VerificationContext validateIntegrity(Insertable<CheckListData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('to_do_item_id')) {
+      context.handle(
+          _toDoItemIdMeta,
+          toDoItemId.isAcceptableOrUnknown(
+              data['to_do_item_id']!, _toDoItemIdMeta));
+    } else if (isInserting) {
+      context.missing(_toDoItemIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('is_completed')) {
+      context.handle(
+          _isCompletedMeta,
+          isCompleted.isAcceptableOrUnknown(
+              data['is_completed']!, _isCompletedMeta));
+    } else if (isInserting) {
+      context.missing(_isCompletedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CheckListData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CheckListData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      toDoItemId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}to_do_item_id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      isCompleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_completed'])!,
+    );
+  }
+
+  @override
+  $CheckListTable createAlias(String alias) {
+    return $CheckListTable(attachedDatabase, alias);
+  }
+}
+
+class CheckListData extends DataClass implements Insertable<CheckListData> {
+  final int id;
+  final int toDoItemId;
+  final String title;
+  final bool isCompleted;
+  const CheckListData(
+      {required this.id,
+      required this.toDoItemId,
+      required this.title,
+      required this.isCompleted});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['to_do_item_id'] = Variable<int>(toDoItemId);
+    map['title'] = Variable<String>(title);
+    map['is_completed'] = Variable<bool>(isCompleted);
+    return map;
+  }
+
+  CheckListCompanion toCompanion(bool nullToAbsent) {
+    return CheckListCompanion(
+      id: Value(id),
+      toDoItemId: Value(toDoItemId),
+      title: Value(title),
+      isCompleted: Value(isCompleted),
+    );
+  }
+
+  factory CheckListData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CheckListData(
+      id: serializer.fromJson<int>(json['id']),
+      toDoItemId: serializer.fromJson<int>(json['toDoItemId']),
+      title: serializer.fromJson<String>(json['title']),
+      isCompleted: serializer.fromJson<bool>(json['isCompleted']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'toDoItemId': serializer.toJson<int>(toDoItemId),
+      'title': serializer.toJson<String>(title),
+      'isCompleted': serializer.toJson<bool>(isCompleted),
+    };
+  }
+
+  CheckListData copyWith(
+          {int? id, int? toDoItemId, String? title, bool? isCompleted}) =>
+      CheckListData(
+        id: id ?? this.id,
+        toDoItemId: toDoItemId ?? this.toDoItemId,
+        title: title ?? this.title,
+        isCompleted: isCompleted ?? this.isCompleted,
+      );
+  CheckListData copyWithCompanion(CheckListCompanion data) {
+    return CheckListData(
+      id: data.id.present ? data.id.value : this.id,
+      toDoItemId:
+          data.toDoItemId.present ? data.toDoItemId.value : this.toDoItemId,
+      title: data.title.present ? data.title.value : this.title,
+      isCompleted:
+          data.isCompleted.present ? data.isCompleted.value : this.isCompleted,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CheckListData(')
+          ..write('id: $id, ')
+          ..write('toDoItemId: $toDoItemId, ')
+          ..write('title: $title, ')
+          ..write('isCompleted: $isCompleted')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, toDoItemId, title, isCompleted);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CheckListData &&
+          other.id == this.id &&
+          other.toDoItemId == this.toDoItemId &&
+          other.title == this.title &&
+          other.isCompleted == this.isCompleted);
+}
+
+class CheckListCompanion extends UpdateCompanion<CheckListData> {
+  final Value<int> id;
+  final Value<int> toDoItemId;
+  final Value<String> title;
+  final Value<bool> isCompleted;
+  const CheckListCompanion({
+    this.id = const Value.absent(),
+    this.toDoItemId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.isCompleted = const Value.absent(),
+  });
+  CheckListCompanion.insert({
+    this.id = const Value.absent(),
+    required int toDoItemId,
+    required String title,
+    required bool isCompleted,
+  })  : toDoItemId = Value(toDoItemId),
+        title = Value(title),
+        isCompleted = Value(isCompleted);
+  static Insertable<CheckListData> custom({
+    Expression<int>? id,
+    Expression<int>? toDoItemId,
+    Expression<String>? title,
+    Expression<bool>? isCompleted,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (toDoItemId != null) 'to_do_item_id': toDoItemId,
+      if (title != null) 'title': title,
+      if (isCompleted != null) 'is_completed': isCompleted,
+    });
+  }
+
+  CheckListCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? toDoItemId,
+      Value<String>? title,
+      Value<bool>? isCompleted}) {
+    return CheckListCompanion(
+      id: id ?? this.id,
+      toDoItemId: toDoItemId ?? this.toDoItemId,
+      title: title ?? this.title,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (toDoItemId.present) {
+      map['to_do_item_id'] = Variable<int>(toDoItemId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (isCompleted.present) {
+      map['is_completed'] = Variable<bool>(isCompleted.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CheckListCompanion(')
+          ..write('id: $id, ')
+          ..write('toDoItemId: $toDoItemId, ')
+          ..write('title: $title, ')
+          ..write('isCompleted: $isCompleted')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $TodoItemsTable todoItems = $TodoItemsTable(this);
   late final $ReminderTimeTable reminderTime = $ReminderTimeTable(this);
+  late final $CheckListTable checkList = $CheckListTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [todoItems, reminderTime];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [todoItems, reminderTime, checkList];
 }
 
 typedef $$TodoItemsTableCreateCompanionBuilder = TodoItemsCompanion Function({
   Value<int> id,
   required String title,
   Value<String?> description,
-  required Enum difficulty,
+  required Difficulty difficulty,
   required bool isCompleted,
   required DateTime deadLine,
   required DateTime createdTime,
@@ -648,7 +919,7 @@ typedef $$TodoItemsTableUpdateCompanionBuilder = TodoItemsCompanion Function({
   Value<int> id,
   Value<String> title,
   Value<String?> description,
-  Value<Enum> difficulty,
+  Value<Difficulty> difficulty,
   Value<bool> isCompleted,
   Value<DateTime> deadLine,
   Value<DateTime> createdTime,
@@ -674,7 +945,7 @@ class $$TodoItemsTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             Value<String> title = const Value.absent(),
             Value<String?> description = const Value.absent(),
-            Value<Enum> difficulty = const Value.absent(),
+            Value<Difficulty> difficulty = const Value.absent(),
             Value<bool> isCompleted = const Value.absent(),
             Value<DateTime> deadLine = const Value.absent(),
             Value<DateTime> createdTime = const Value.absent(),
@@ -692,7 +963,7 @@ class $$TodoItemsTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             required String title,
             Value<String?> description = const Value.absent(),
-            required Enum difficulty,
+            required Difficulty difficulty,
             required bool isCompleted,
             required DateTime deadLine,
             required DateTime createdTime,
@@ -727,8 +998,8 @@ class $$TodoItemsTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnWithTypeConverterFilters<Enum, Enum, String> get difficulty =>
-      $state.composableBuilder(
+  ColumnWithTypeConverterFilters<Difficulty, Difficulty, String>
+      get difficulty => $state.composableBuilder(
           column: $state.table.difficulty,
           builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
               column,
@@ -759,6 +1030,19 @@ class $$TodoItemsTableFilterComposer
         builder: (joinBuilder, parentComposers) =>
             $$ReminderTimeTableFilterComposer(ComposerState($state.db,
                 $state.db.reminderTime, joinBuilder, parentComposers)));
+    return f(composer);
+  }
+
+  ComposableFilter checkListRefs(
+      ComposableFilter Function($$CheckListTableFilterComposer f) f) {
+    final $$CheckListTableFilterComposer composer = $state.composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $state.db.checkList,
+        getReferencedColumn: (t) => t.toDoItemId,
+        builder: (joinBuilder, parentComposers) =>
+            $$CheckListTableFilterComposer(ComposerState(
+                $state.db, $state.db.checkList, joinBuilder, parentComposers)));
     return f(composer);
   }
 }
@@ -906,6 +1190,124 @@ class $$ReminderTimeTableOrderingComposer
   }
 }
 
+typedef $$CheckListTableCreateCompanionBuilder = CheckListCompanion Function({
+  Value<int> id,
+  required int toDoItemId,
+  required String title,
+  required bool isCompleted,
+});
+typedef $$CheckListTableUpdateCompanionBuilder = CheckListCompanion Function({
+  Value<int> id,
+  Value<int> toDoItemId,
+  Value<String> title,
+  Value<bool> isCompleted,
+});
+
+class $$CheckListTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $CheckListTable,
+    CheckListData,
+    $$CheckListTableFilterComposer,
+    $$CheckListTableOrderingComposer,
+    $$CheckListTableCreateCompanionBuilder,
+    $$CheckListTableUpdateCompanionBuilder> {
+  $$CheckListTableTableManager(_$AppDatabase db, $CheckListTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$CheckListTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$CheckListTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> toDoItemId = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<bool> isCompleted = const Value.absent(),
+          }) =>
+              CheckListCompanion(
+            id: id,
+            toDoItemId: toDoItemId,
+            title: title,
+            isCompleted: isCompleted,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int toDoItemId,
+            required String title,
+            required bool isCompleted,
+          }) =>
+              CheckListCompanion.insert(
+            id: id,
+            toDoItemId: toDoItemId,
+            title: title,
+            isCompleted: isCompleted,
+          ),
+        ));
+}
+
+class $$CheckListTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $CheckListTable> {
+  $$CheckListTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get title => $state.composableBuilder(
+      column: $state.table.title,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isCompleted => $state.composableBuilder(
+      column: $state.table.isCompleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  $$TodoItemsTableFilterComposer get toDoItemId {
+    final $$TodoItemsTableFilterComposer composer = $state.composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.toDoItemId,
+        referencedTable: $state.db.todoItems,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder, parentComposers) =>
+            $$TodoItemsTableFilterComposer(ComposerState(
+                $state.db, $state.db.todoItems, joinBuilder, parentComposers)));
+    return composer;
+  }
+}
+
+class $$CheckListTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $CheckListTable> {
+  $$CheckListTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get title => $state.composableBuilder(
+      column: $state.table.title,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isCompleted => $state.composableBuilder(
+      column: $state.table.isCompleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  $$TodoItemsTableOrderingComposer get toDoItemId {
+    final $$TodoItemsTableOrderingComposer composer = $state.composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.toDoItemId,
+        referencedTable: $state.db.todoItems,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder, parentComposers) =>
+            $$TodoItemsTableOrderingComposer(ComposerState(
+                $state.db, $state.db.todoItems, joinBuilder, parentComposers)));
+    return composer;
+  }
+}
+
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
@@ -913,4 +1315,6 @@ class $AppDatabaseManager {
       $$TodoItemsTableTableManager(_db, _db.todoItems);
   $$ReminderTimeTableTableManager get reminderTime =>
       $$ReminderTimeTableTableManager(_db, _db.reminderTime);
+  $$CheckListTableTableManager get checkList =>
+      $$CheckListTableTableManager(_db, _db.checkList);
 }
