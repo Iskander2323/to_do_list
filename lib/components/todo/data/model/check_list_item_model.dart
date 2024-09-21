@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:test_project/local_db/local_db.dart';
 
 class CheckListItemModel extends Equatable {
   const CheckListItemModel(
@@ -11,6 +12,12 @@ class CheckListItemModel extends Equatable {
   final int toDoItemId;
   final String title;
   final bool isDone;
+
+  CheckListItemModel.fromLocal(CheckListData data)
+      : id = data.id,
+        toDoItemId = data.toDoItemId,
+        title = data.title,
+        isDone = data.isCompleted;
 
   @override
   // TODO: implement props

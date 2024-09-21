@@ -49,8 +49,8 @@ class $TodoItemsTable extends TodoItems
       const VerificationMeta('deadLine');
   @override
   late final GeneratedColumn<DateTime> deadLine = GeneratedColumn<DateTime>(
-      'dead_line', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      'dead_line', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
   @override
@@ -97,8 +97,6 @@ class $TodoItemsTable extends TodoItems
     if (data.containsKey('dead_line')) {
       context.handle(_deadLineMeta,
           deadLine.isAcceptableOrUnknown(data['dead_line']!, _deadLineMeta));
-    } else if (isInserting) {
-      context.missing(_deadLineMeta);
     }
     if (data.containsKey('created_time')) {
       context.handle(
@@ -129,7 +127,7 @@ class $TodoItemsTable extends TodoItems
       isCompleted: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_completed'])!,
       deadLine: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}dead_line'])!,
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}dead_line']),
       createdTime: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_time'])!,
     );
@@ -150,7 +148,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
   final String? description;
   final Difficulty difficulty;
   final bool isCompleted;
-  final DateTime deadLine;
+  final DateTime? deadLine;
   final DateTime createdTime;
   const TodoItem(
       {required this.id,
@@ -158,7 +156,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       this.description,
       required this.difficulty,
       required this.isCompleted,
-      required this.deadLine,
+      this.deadLine,
       required this.createdTime});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -173,7 +171,9 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           $TodoItemsTable.$converterdifficulty.toSql(difficulty));
     }
     map['is_completed'] = Variable<bool>(isCompleted);
-    map['dead_line'] = Variable<DateTime>(deadLine);
+    if (!nullToAbsent || deadLine != null) {
+      map['dead_line'] = Variable<DateTime>(deadLine);
+    }
     map['created_time'] = Variable<DateTime>(createdTime);
     return map;
   }
@@ -187,7 +187,9 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           : Value(description),
       difficulty: Value(difficulty),
       isCompleted: Value(isCompleted),
-      deadLine: Value(deadLine),
+      deadLine: deadLine == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deadLine),
       createdTime: Value(createdTime),
     );
   }
@@ -202,7 +204,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       difficulty: $TodoItemsTable.$converterdifficulty
           .fromJson(serializer.fromJson<String>(json['difficulty'])),
       isCompleted: serializer.fromJson<bool>(json['isCompleted']),
-      deadLine: serializer.fromJson<DateTime>(json['deadLine']),
+      deadLine: serializer.fromJson<DateTime?>(json['deadLine']),
       createdTime: serializer.fromJson<DateTime>(json['createdTime']),
     );
   }
@@ -216,7 +218,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       'difficulty': serializer.toJson<String>(
           $TodoItemsTable.$converterdifficulty.toJson(difficulty)),
       'isCompleted': serializer.toJson<bool>(isCompleted),
-      'deadLine': serializer.toJson<DateTime>(deadLine),
+      'deadLine': serializer.toJson<DateTime?>(deadLine),
       'createdTime': serializer.toJson<DateTime>(createdTime),
     };
   }
@@ -227,7 +229,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           Value<String?> description = const Value.absent(),
           Difficulty? difficulty,
           bool? isCompleted,
-          DateTime? deadLine,
+          Value<DateTime?> deadLine = const Value.absent(),
           DateTime? createdTime}) =>
       TodoItem(
         id: id ?? this.id,
@@ -235,7 +237,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
         description: description.present ? description.value : this.description,
         difficulty: difficulty ?? this.difficulty,
         isCompleted: isCompleted ?? this.isCompleted,
-        deadLine: deadLine ?? this.deadLine,
+        deadLine: deadLine.present ? deadLine.value : this.deadLine,
         createdTime: createdTime ?? this.createdTime,
       );
   TodoItem copyWithCompanion(TodoItemsCompanion data) {
@@ -290,7 +292,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
   final Value<String?> description;
   final Value<Difficulty> difficulty;
   final Value<bool> isCompleted;
-  final Value<DateTime> deadLine;
+  final Value<DateTime?> deadLine;
   final Value<DateTime> createdTime;
   const TodoItemsCompanion({
     this.id = const Value.absent(),
@@ -307,12 +309,11 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     this.description = const Value.absent(),
     required Difficulty difficulty,
     required bool isCompleted,
-    required DateTime deadLine,
+    this.deadLine = const Value.absent(),
     required DateTime createdTime,
   })  : title = Value(title),
         difficulty = Value(difficulty),
         isCompleted = Value(isCompleted),
-        deadLine = Value(deadLine),
         createdTime = Value(createdTime);
   static Insertable<TodoItem> custom({
     Expression<int>? id,
@@ -340,7 +341,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
       Value<String?>? description,
       Value<Difficulty>? difficulty,
       Value<bool>? isCompleted,
-      Value<DateTime>? deadLine,
+      Value<DateTime?>? deadLine,
       Value<DateTime>? createdTime}) {
     return TodoItemsCompanion(
       id: id ?? this.id,
@@ -912,7 +913,7 @@ typedef $$TodoItemsTableCreateCompanionBuilder = TodoItemsCompanion Function({
   Value<String?> description,
   required Difficulty difficulty,
   required bool isCompleted,
-  required DateTime deadLine,
+  Value<DateTime?> deadLine,
   required DateTime createdTime,
 });
 typedef $$TodoItemsTableUpdateCompanionBuilder = TodoItemsCompanion Function({
@@ -921,7 +922,7 @@ typedef $$TodoItemsTableUpdateCompanionBuilder = TodoItemsCompanion Function({
   Value<String?> description,
   Value<Difficulty> difficulty,
   Value<bool> isCompleted,
-  Value<DateTime> deadLine,
+  Value<DateTime?> deadLine,
   Value<DateTime> createdTime,
 });
 
@@ -947,7 +948,7 @@ class $$TodoItemsTableTableManager extends RootTableManager<
             Value<String?> description = const Value.absent(),
             Value<Difficulty> difficulty = const Value.absent(),
             Value<bool> isCompleted = const Value.absent(),
-            Value<DateTime> deadLine = const Value.absent(),
+            Value<DateTime?> deadLine = const Value.absent(),
             Value<DateTime> createdTime = const Value.absent(),
           }) =>
               TodoItemsCompanion(
@@ -965,7 +966,7 @@ class $$TodoItemsTableTableManager extends RootTableManager<
             Value<String?> description = const Value.absent(),
             required Difficulty difficulty,
             required bool isCompleted,
-            required DateTime deadLine,
+            Value<DateTime?> deadLine = const Value.absent(),
             required DateTime createdTime,
           }) =>
               TodoItemsCompanion.insert(

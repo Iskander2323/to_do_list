@@ -31,7 +31,7 @@ class ToDoModel extends Equatable {
     final titleCompanion = Value<String>(title);
     final descriptionCompanion = Value<String?>(description);
     final createdTimeCompanion = Value<DateTime>(createdTime);
-    final deadlineCompanion = Value<DateTime>(deadline);
+    final deadlineCompanion = Value<DateTime?>(deadline);
     final difficultyCompanion = Value<Difficulty>(difficulty);
     final isCompletedCompanion = Value<bool>(isCompleted);
     return TodoItemsCompanion(
@@ -48,13 +48,23 @@ class ToDoModel extends Equatable {
   final int id;
   final String title;
   final String? description;
-  final List<CheckListItemModel> checkList;
+  final List<CheckListItemModel>? checkList;
   final Difficulty difficulty;
   final bool isCompleted;
-  final DateTime deadline;
-  final List<RemindTimeModel> remindersTimeList;
+  final DateTime? deadline;
+  final List<RemindTimeModel>? remindersTimeList;
   final DateTime createdTime;
 
   @override
-  List<Object?> get props => [id, title, description, isCompleted];
+  List<Object?> get props => [
+        id,
+        title,
+        description,
+        isCompleted,
+        checkList,
+        difficulty,
+        deadline,
+        remindersTimeList,
+        createdTime
+      ];
 }
