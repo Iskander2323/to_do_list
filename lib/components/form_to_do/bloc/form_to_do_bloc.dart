@@ -18,12 +18,6 @@ class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
 
   Future<void> _createToDo(
       CreateToDoEvent event, Emitter<FormToDoState> emit) async {
-    final ToDoModel toDoModel = ToDoModel(
-        id: 0,
-        title: event.taskTitle,
-        description: event.description,
-        isCompleted: false);
-
-    _toDoRepository.insertOrUpdate(toDoModel);
+    _toDoRepository.insertOrUpdate(event.toDoModel);
   }
 }

@@ -8,8 +8,7 @@ sealed class FormToDoEvent extends Equatable {
 }
 
 final class CreateToDoEvent extends FormToDoEvent {
-  const CreateToDoEvent({required this.taskTitle, required this.description});
+  const CreateToDoEvent({required this.toDoModel});
 
-  final String taskTitle;
-  final String description;
+  final ToDoModel toDoModel;
 }

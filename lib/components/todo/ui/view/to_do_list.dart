@@ -34,7 +34,6 @@ class _ToDoListState extends State<ToDoList> {
                 return const Center(child: Text('ERROR'));
               case ToDoStatus.success:
                 if (state.toDoItems.isNotEmpty) {
-                  log('IS NOT EMPTY');
                   final body = Container(
                     width: contrains.maxWidth,
                     height: contrains.maxHeight,
@@ -68,7 +67,6 @@ class _ToDoListState extends State<ToDoList> {
                   );
                   return body;
                 } else {
-                  log('IS EMPTY');
                   return Container(
                       child: Column(
                     children: [

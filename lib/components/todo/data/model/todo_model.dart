@@ -7,7 +7,7 @@ import 'package:test_project/local_db/local_db.dart';
 enum Difficulty { trivial, easy, medium, hard }
 
 class ToDoModel extends Equatable {
-  ToDoModel(
+  const ToDoModel(
       {required this.id,
       required this.title,
       required this.description,

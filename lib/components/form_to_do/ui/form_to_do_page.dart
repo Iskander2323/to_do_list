@@ -1,12 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_project/components/form_to_do/bloc/form_to_do_bloc.dart';
+import 'package:test_project/components/todo/data/model/check_list_item_model.dart';
+import 'package:test_project/components/todo/data/model/remind_time_model.dart';
+import 'package:test_project/components/todo/data/model/todo_model.dart';
 
 class FormToDoPage extends StatefulWidget {
   const FormToDoPage({super.key});
 
   @override
   State<FormToDoPage> createState() => _FormToDoPageState();
+}
+
+Widget _diffucultyButton(String difficultyTitle) {
+  return Column(
+    children: [
+      ElevatedButton.icon(
+        onPressed: () {},
+        label: Icon(Icons.add),
+        style: ElevatedButton.styleFrom(
+            minimumSize: Size(
+              50,
+              70,
+            ),
+            backgroundColor: Color.fromARGB(255, 58, 18, 83),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            )),
+      ),
+      Text(
+        difficultyTitle,
+        style: TextStyle(color: Color.fromARGB(255, 216, 142, 205)),
+      )
+    ],
+  );
 }
 
 class _FormToDoPageState extends State<FormToDoPage> {
@@ -28,8 +55,19 @@ class _FormToDoPageState extends State<FormToDoPage> {
               onPressed: () {
                 final title = titleController.text;
                 final description = descriptionController.text;
-                context.read<FormToDoBloc>().add(CreateToDoEvent(
-                    taskTitle: title, description: description));
+                final ToDoModel toDoModel = ToDoModel(
+                    id: 0,
+                    title: title,
+                    description: description,
+                    checkList: <CheckListItemModel>[],
+                    isCompleted: false,
+                    difficulty: Difficulty.easy,
+                    deadline: DateTime.now(),
+                    remindersTimeList: <RemindTimeModel>[],
+                    createdTime: DateTime.now());
+                context
+                    .read<FormToDoBloc>()
+                    .add(CreateToDoEvent(toDoModel: toDoModel));
                 Navigator.pop(context);
               },
               child: Text(
@@ -98,7 +136,30 @@ class _FormToDoPageState extends State<FormToDoPage> {
                     padding: EdgeInsets.all(20),
                     color: Colors.black,
                     child: Column(
-                      children: [],
+                      children: [
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'Difficulty',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _diffucultyButton('Trivial'),
+                                  _diffucultyButton('Easy'),
+                                  _diffucultyButton('Medium'),
+                                  _diffucultyButton('Hard'),
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   )
                 ],
