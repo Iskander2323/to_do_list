@@ -20,4 +20,6 @@ class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
       CreateToDoEvent event, Emitter<FormToDoState> emit) async {
     _toDoRepository.insertOrUpdate(event.toDoModel);
   }
+
+  Future<void> _changeDifficulty() async {}
 }

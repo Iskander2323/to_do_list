@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_project/components/form_to_do/bloc/form_to_do_bloc.dart';
@@ -7,38 +9,67 @@ import 'package:test_project/components/todo/data/model/todo_model.dart';
 
 class FormToDoPage extends StatefulWidget {
   const FormToDoPage({super.key});
-
   @override
   State<FormToDoPage> createState() => _FormToDoPageState();
 }
 
-Widget _diffucultyButton(String difficultyTitle) {
-  return Column(
-    children: [
-      ElevatedButton.icon(
-        onPressed: () {},
-        label: Icon(Icons.add),
-        style: ElevatedButton.styleFrom(
-            minimumSize: Size(
-              50,
-              70,
-            ),
-            backgroundColor: Color.fromARGB(255, 58, 18, 83),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            )),
-      ),
-      Text(
-        difficultyTitle,
-        style: TextStyle(color: Color.fromARGB(255, 216, 142, 205)),
-      )
-    ],
-  );
-}
-
 class _FormToDoPageState extends State<FormToDoPage> {
+  late Difficulty difficulty;
+  late DateTime scheduling;
+
+  @override
+  void initState() {
+    super.initState();
+    difficulty = Difficulty.easy;
+    scheduling = DateTime.now();
+  }
+
+  Widget _diffucultyButton(String difficultyTitle) {
+    return Column(
+      children: [
+        ElevatedButton.icon(
+          onPressed: () {
+            setState(() {
+              difficulty = Difficulty.values.firstWhere(
+                  (element) => element.name == difficultyTitle.toLowerCase());
+            });
+          },
+          label: Icon(Icons.add),
+          style: ElevatedButton.styleFrom(
+              minimumSize: Size(
+                50,
+                70,
+              ),
+              backgroundColor:
+                  difficultyTitle.toLowerCase() == difficulty.name.toString()
+                      ? Color.fromARGB(255, 216, 142, 205)
+                      : Color.fromARGB(255, 58, 18, 83),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              )),
+        ),
+        Text(
+          difficultyTitle,
+          style: TextStyle(color: Color.fromARGB(255, 216, 142, 205)),
+        )
+      ],
+    );
+  }
+
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController dateTimeController = TextEditingController();
+
+  Future<void> dateTimePicker() async {
+    DateTime? date = await showDatePicker(
+        context: context, firstDate: DateTime.now(), lastDate: DateTime(2100));
+    if (date != null) {
+      setState(() {
+        scheduling = date;
+        dateTimeController.text = scheduling.toString();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +92,7 @@ class _FormToDoPageState extends State<FormToDoPage> {
                     description: description,
                     checkList: <CheckListItemModel>[],
                     isCompleted: false,
-                    difficulty: Difficulty.easy,
+                    difficulty: difficulty,
                     deadline: DateTime.now(),
                     remindersTimeList: <RemindTimeModel>[],
                     createdTime: DateTime.now());
@@ -142,20 +173,47 @@ class _FormToDoPageState extends State<FormToDoPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      'Difficulty',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        _diffucultyButton('Trivial'),
+                                        _diffucultyButton('Easy'),
+                                        _diffucultyButton('Medium'),
+                                        _diffucultyButton('Hard'),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                               Text(
-                                'Difficulty',
+                                'Scheduling',
                                 style: TextStyle(color: Colors.white),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _diffucultyButton('Trivial'),
-                                  _diffucultyButton('Easy'),
-                                  _diffucultyButton('Medium'),
-                                  _diffucultyButton('Hard'),
-                                ],
-                              )
+                              Container(
+                                  width: constraints.maxWidth,
+                                  height: constraints.maxHeight * 0.09,
+                                  child: TextField(
+                                    controller: dateTimeController,
+                                    decoration: InputDecoration(
+                                        labelText: 'Due Date',
+                                        fillColor: Colors.white),
+                                    readOnly: true,
+                                    onTap: () {
+                                      dateTimePicker();
+                                    },
+                                  )),
                             ],
                           ),
                         )
