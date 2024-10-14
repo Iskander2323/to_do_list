@@ -7,6 +7,11 @@ class TodoRepository {
     return toDoItems;
   }
 
+  Future<ToDoModel?> getToDoById(int id) async {
+    final ToDoModel? toDoModel = await database.getToDoById(id);
+    return toDoModel;
+  }
+
   Future<void> insertOrUpdate(ToDoModel toDoItem) async {
     final toDoItemCompanion = toDoItem.toToDoCompanion();
     //TODO fix this bug

@@ -130,6 +130,25 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
+  Future<ToDoModel?> getToDoById(int id) async {
+    late TodoItem? todoItem;
+    try {
+      todoItem = await (select(todoItems)..where((tbl) => tbl.id.equals(id)))
+          .getSingleOrNull();
+
+      if (todoItem != null) {
+        List<RemindTimeModel> reminderTimeList = await getReminderTimeList(id);
+        List<CheckListItemModel> checkList = await getCheckList(id);
+        return ToDoModel.fromLocal(todoItem, checkList, reminderTimeList);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log(e.toString(), name: 'FROM GET TO DO BY ID');
+    }
+    return null;
+  }
+
   Future<void> updateToDoStatus(int id, bool isDone) async {
     try {
       await (update(todoItems)..where((tbl) => tbl.id.equals(id)))

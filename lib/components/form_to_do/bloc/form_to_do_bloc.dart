@@ -11,9 +11,26 @@ class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
 
   FormToDoBloc({required TodoRepository toDoRepository})
       : _toDoRepository = toDoRepository,
-        super(FormToDoInitial()) {
+        super(const FormToDoState()) {
     on<FormToDoEvent>((event, emit) {});
     on<CreateToDoEvent>(_createToDo);
+  }
+
+  Future<void> _formToDo(
+      FormFieldsToDoEvent event, Emitter<FormToDoState> emit) async {
+    if (state.runtimeType == FormToDoState) {
+      if (event.id != null) {
+        final id = int.tryParse(event.id!) ?? 0;
+        var toDoModel = await _toDoRepository.getToDoById(id);
+        toDoModel ??= ToDoModel.defaultModel();
+        emit(FormToDoEditableState(
+            status: FormToDoStatus.edit, toDoModel: toDoModel));
+      } else {
+        final toDoModel = ToDoModel.defaultModel();
+        emit(FormToDoEditableState(
+            status: FormToDoStatus.edit, toDoModel: toDoModel));
+      }
+    }
   }
 
   Future<void> _createToDo(

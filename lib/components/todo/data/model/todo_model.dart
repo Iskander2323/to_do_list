@@ -18,7 +18,7 @@ class ToDoModel extends Equatable {
       required this.remindersTimeList,
       required this.createdTime});
 
-  ToDoModel.fromLocal(TodoItem data, this.checkList, this.remindersTimeList)
+  ToDoModel.fromLocal(TodoItem data, List<CheckListItemModel> this.checkList, List<RemindTimeModel> this.remindersTimeList)
       : id = data.id,
         title = data.title,
         description = data.description,
@@ -26,6 +26,18 @@ class ToDoModel extends Equatable {
         difficulty = data.difficulty,
         deadline = data.deadLine,
         createdTime = data.createdTime;
+
+  ToDoModel.defaultModel() 
+   : id = 0,
+     title = '',
+     description = '',
+     checkList = <CheckListItemModel>[],
+     difficulty = Difficulty.easy,
+     isCompleted = false,
+     deadline = DateTime.now(),
+     remindersTimeList = <RemindTimeModel>[],
+     createdTime = DateTime.now()
+   ;
 
   TodoItemsCompanion toToDoCompanion() {
     final titleCompanion = Value<String>(title);
