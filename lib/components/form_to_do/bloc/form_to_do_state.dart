@@ -17,7 +17,9 @@ class FormToDoState extends Equatable {
 
 final class FormToDoEditableState extends FormToDoState {
   FormToDoEditableState(
-      {required this.toDoModel, this.status = FormToDoStatus.initial});
+      {required this.toDoModel,
+      this.status = FormToDoStatus.initial,
+      this.chosenDifficulty = Difficulty.easy});
 
   FormToDoEditableState copyWith({
     required FormToDoStatus status,
@@ -28,4 +30,8 @@ final class FormToDoEditableState extends FormToDoState {
 
   final ToDoModel toDoModel;
   final FormToDoStatus status;
+  final Difficulty chosenDifficulty;
+
+  @override
+  List<Object> get props => [status, toDoModel, chosenDifficulty];
 }

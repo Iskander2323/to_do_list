@@ -27,7 +27,6 @@ class App extends StatelessWidget {
           useMaterial3: true,
         ),
         routerConfig: routes,
-        // home: HomePage(todoRepository: todoRepository)
       ),
     );
   }

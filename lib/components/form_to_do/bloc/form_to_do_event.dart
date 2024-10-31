@@ -18,4 +18,7 @@ final class CreateToDoEvent extends FormToDoEvent {
   final ToDoModel toDoModel;
 }
 
-final class ChangeDifficultyEvent extends FormToDoEvent {}
+final class ChangeDifficultyEvent extends FormToDoEvent {
+  const ChangeDifficultyEvent({required this.chosenDifficulty});
+  final Difficulty chosenDifficulty;
+}
