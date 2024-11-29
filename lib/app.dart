@@ -17,7 +17,8 @@ class App extends StatelessWidget {
         BlocProvider(
             create: (context) => ToDoBloc(toDoRepository: toDoRepository)),
         BlocProvider(
-            create: (context) => FormToDoBloc(toDoRepository: toDoRepository))
+            create: (context) => FormToDoBloc(toDoRepository: toDoRepository)),
+        RepositoryProvider.value(value: toDoRepository)
       ],
       child: MaterialApp.router(
         title: 'Flutter Demo',

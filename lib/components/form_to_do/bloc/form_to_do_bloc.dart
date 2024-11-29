@@ -12,6 +12,7 @@ class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
   FormToDoBloc({required TodoRepository toDoRepository})
       : _toDoRepository = toDoRepository,
         super(const FormToDoState()) {
+    on<FormFieldsToDoEvent>(_formToDo);
     on<FormToDoEvent>((event, emit) {});
     on<CreateToDoEvent>(_createToDo);
   }
@@ -28,7 +29,7 @@ class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
       } else {
         final toDoModel = ToDoModel.defaultModel();
         emit(FormToDoEditableState(
-            status: FormToDoStatus.edit, toDoModel: toDoModel));
+            status: FormToDoStatus.success, toDoModel: toDoModel));
       }
     }
   }
