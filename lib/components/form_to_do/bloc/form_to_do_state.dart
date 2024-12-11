@@ -22,11 +22,11 @@ final class FormToDoEditableState extends FormToDoState {
       this.chosenDifficulty = Difficulty.easy});
 
   FormToDoEditableState copyWith(
-      {required FormToDoStatus status,
+      {FormToDoStatus? status,
       ToDoModel? toDo,
       Difficulty? newChosenDifficulty}) {
     return FormToDoEditableState(
-        status: status,
+        status: status ?? this.status,
         toDoModel: toDoModel,
         chosenDifficulty: newChosenDifficulty ?? chosenDifficulty);
   }

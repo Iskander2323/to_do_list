@@ -15,7 +15,7 @@ class _ToDoItemState extends State<ToDoItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: Row(
         children: [
           SizedBox(
@@ -33,7 +33,7 @@ class _ToDoItemState extends State<ToDoItem> {
                           isDone: isDone,
                         ));
                   },
-                  icon: Icon(Icons.add)),
+                  icon: const Icon(Icons.add)),
             ),
           ),
           Container(

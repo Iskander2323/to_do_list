@@ -23,7 +23,7 @@ class _FormToDoFieldsPageState extends State<FormToDoFieldsPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _diffucultyButton(String difficultyTitle, Difficulty difficulty) {
+    Widget diffucultyButton(String difficultyTitle, Difficulty difficulty) {
       return Column(
         children: [
           ElevatedButton.icon(
@@ -33,26 +33,25 @@ class _FormToDoFieldsPageState extends State<FormToDoFieldsPage> {
                       element.name == difficultyTitle.toLowerCase());
               context.read<FormToDoBloc>().add(
                   ChangeDifficultyEvent(chosenDifficulty: newChosenDifficulty));
-              log(newChosenDifficulty.name);
-              log('CHANGING DIFFICULTY EVENT');
+              log(newChosenDifficulty.name, name: 'NEW CHOSEN DIFFICULTY');
             },
-            label: Icon(Icons.add),
+            label: const Icon(Icons.add),
             style: ElevatedButton.styleFrom(
-                minimumSize: Size(
+                minimumSize: const Size(
                   50,
                   70,
                 ),
                 backgroundColor: difficultyTitle.toLowerCase() ==
                         difficulty.name.toLowerCase()
-                    ? Color.fromARGB(255, 188, 108, 238)
-                    : Color.fromARGB(255, 58, 18, 83),
+                    ? const Color.fromARGB(255, 188, 108, 238)
+                    : const Color.fromARGB(255, 58, 18, 83),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 )),
           ),
           Text(
             difficultyTitle,
-            style: TextStyle(color: Color.fromARGB(255, 216, 142, 205)),
+            style: const TextStyle(color: Color.fromARGB(255, 216, 142, 205)),
           )
         ],
       );
@@ -60,7 +59,7 @@ class _FormToDoFieldsPageState extends State<FormToDoFieldsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Create to do',
           style: TextStyle(
             color: Colors.white,
@@ -69,7 +68,7 @@ class _FormToDoFieldsPageState extends State<FormToDoFieldsPage> {
         actions: [
           TextButton(
               onPressed: () {},
-              child: Text(
+              child: const Text(
                 'CREATE',
                 style: TextStyle(color: Colors.white),
               ))
@@ -80,119 +79,136 @@ class _FormToDoFieldsPageState extends State<FormToDoFieldsPage> {
       resizeToAvoidBottomInset: false,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return SizedBox(
-              width: constraints.maxWidth,
-              height: constraints.maxHeight,
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                    width: constraints.maxWidth,
-                    height: constraints.maxHeight * 0.3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          color: const Color.fromARGB(255, 58, 18, 83),
-                          child: TextField(
-                            controller: titleController,
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 216, 142, 205)),
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                labelText: 'Task Title',
-                                labelStyle: TextStyle(
-                                    color: const Color.fromARGB(
-                                        255, 216, 142, 205))),
-                          ),
-                        ),
-                        Container(
-                          color: const Color.fromARGB(255, 58, 18, 83),
-                          child: TextField(
-                            controller: descriptionController,
-                            maxLines: null,
-                            minLines: 3,
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 216, 142, 205),
+          return BlocBuilder<FormToDoBloc, FormToDoState>(
+            builder: (context, state) {
+              return SizedBox(
+                  width: constraints.maxWidth,
+                  height: constraints.maxHeight,
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, bottom: 20),
+                        width: constraints.maxWidth,
+                        height: constraints.maxHeight * 0.3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              color: const Color.fromARGB(255, 58, 18, 83),
+                              child: TextField(
+                                controller: titleController,
+                                style: const TextStyle(
+                                    color: Color.fromARGB(255, 216, 142, 205)),
+                                decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    labelText: 'Task Title',
+                                    labelStyle: TextStyle(
+                                        color: Color.fromARGB(
+                                            255, 216, 142, 205))),
+                              ),
                             ),
-                            decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10),
-                                alignLabelWithHint: true,
-                                labelText: 'Notes',
-                                labelStyle: TextStyle(
-                                    color: const Color.fromARGB(
-                                        255, 216, 142, 205))),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: constraints.maxWidth,
-                    height: constraints.maxHeight * 0.7,
-                    padding: EdgeInsets.all(20),
-                    color: Colors.black,
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      'Difficulty',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Row(
+                            Container(
+                              color: const Color.fromARGB(255, 58, 18, 83),
+                              child: TextField(
+                                controller: descriptionController,
+                                maxLines: null,
+                                minLines: 3,
+                                style: const TextStyle(
+                                  color: Color.fromARGB(255, 216, 142, 205),
+                                ),
+                                decoration: const InputDecoration(
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    alignLabelWithHint: true,
+                                    labelText: 'Notes',
+                                    labelStyle: TextStyle(
+                                        color: Color.fromARGB(
+                                            255, 216, 142, 205))),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: constraints.maxWidth,
+                        height: constraints.maxHeight * 0.7,
+                        padding: const EdgeInsets.all(20),
+                        color: Colors.black,
+                        child: Column(
+                          children: [
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        _diffucultyButton('Trivial',
-                                            widget.toDoModel.difficulty),
-                                        _diffucultyButton('Easy',
-                                            widget.toDoModel.difficulty),
-                                        _diffucultyButton('Medium',
-                                            widget.toDoModel.difficulty),
-                                        _diffucultyButton('Hard',
-                                            widget.toDoModel.difficulty),
+                                        const Text(
+                                          'Difficulty',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            diffucultyButton(
+                                                'Trivial',
+                                                (state as FormToDoEditableState)
+                                                    .chosenDifficulty),
+                                            diffucultyButton(
+                                                'Easy',
+                                                (state as FormToDoEditableState)
+                                                    .chosenDifficulty),
+                                            diffucultyButton(
+                                                'Medium',
+                                                (state as FormToDoEditableState)
+                                                    .chosenDifficulty),
+                                            diffucultyButton(
+                                                'Hard',
+                                                (state as FormToDoEditableState)
+                                                    .chosenDifficulty),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Text(
-                                'Scheduling',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Container(
-                                  width: constraints.maxWidth,
-                                  height: constraints.maxHeight * 0.09,
-                                  child: TextField(
-                                    controller: dateTimeController,
+                                  ),
+                                  const Text(
+                                    'Scheduling',
                                     style: TextStyle(color: Colors.white),
-                                    decoration: InputDecoration(
-                                        labelText: 'Due Date',
-                                        fillColor: Colors.white),
-                                    readOnly: true,
-                                    onTap: () {},
-                                  )),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ));
+                                  ),
+                                  SizedBox(
+                                      width: constraints.maxWidth,
+                                      height: constraints.maxHeight * 0.09,
+                                      child: TextField(
+                                        controller: dateTimeController,
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                        decoration: const InputDecoration(
+                                            labelText: 'Due Date',
+                                            fillColor: Colors.white),
+                                        readOnly: true,
+                                        onTap: () {},
+                                      )),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ));
+            },
+          );
         },
       ),
     );

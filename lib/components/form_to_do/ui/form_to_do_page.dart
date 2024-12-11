@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_project/components/form_to_do/bloc/form_to_do_bloc.dart';
@@ -18,33 +20,32 @@ class _FormToDoPageState extends State<FormToDoPage> {
       if (state.runtimeType == FormToDoEditableState) {
         switch ((state as FormToDoEditableState).status) {
           case FormToDoStatus.success:
-            return FormToDoFieldsPage(
-                toDoModel: (state as FormToDoEditableState).toDoModel);
+            return FormToDoFieldsPage(toDoModel: (state).toDoModel);
           case FormToDoStatus.edit:
             return FormToDoFieldsPage(
-              toDoModel: (state as FormToDoEditableState).toDoModel,
+              toDoModel: (state).toDoModel,
               isEditing: true,
             );
           case FormToDoStatus.initial:
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           case FormToDoStatus.saving:
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           case FormToDoStatus.failure:
-            return Center(
+            return const Center(
               child: Text('ERROR SOMETHING WENT WRONG FAILURE'),
             );
 
           default:
-            return Center(
+            return const Center(
               child: Text('ERROR SOMETHING WENT WRONG DEFAULT'),
             );
         }
       } else {
-        return Center(
+        return const Center(
           child: Text('ERROR SOMETHING WENT WRONG ELSE EXCEPTION'),
         );
       }

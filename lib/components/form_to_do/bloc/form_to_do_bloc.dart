@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:test_project/components/todo/data/model/todo_model.dart';
@@ -13,8 +15,8 @@ class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
       : _toDoRepository = toDoRepository,
         super(const FormToDoState()) {
     on<FormFieldsToDoEvent>(_formToDo);
-    on<FormToDoEvent>((event, emit) {});
     on<CreateToDoEvent>(_createToDo);
+    on<ChangeDifficultyEvent>(_changeDifficulty);
   }
 
   Future<void> _formToDo(
@@ -39,5 +41,9 @@ class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
     _toDoRepository.insertOrUpdate(event.toDoModel);
   }
 
-  Future<void> _changeDifficulty() async {}
+  Future<void> _changeDifficulty(
+      ChangeDifficultyEvent event, Emitter<FormToDoState> emit) async {
+    emit((state as FormToDoEditableState)
+        .copyWith(newChosenDifficulty: event.chosenDifficulty));
+  }
 }

@@ -28,7 +28,7 @@ class _ToDoListState extends State<ToDoList> {
                 return const CircularProgressIndicator();
               case ToDoStatus.loading:
                 return const CircularProgressIndicator();
-              case ToDoStatus.failire:
+              case ToDoStatus.failure:
                 return const Center(child: Text('ERROR'));
               case ToDoStatus.success:
                 if (state.toDoItems.isNotEmpty) {
@@ -46,7 +46,7 @@ class _ToDoListState extends State<ToDoList> {
                             onPressed: () {
                               context.goNamed('FormFields');
                             },
-                            icon: Icon(Icons.add),
+                            icon: const Icon(Icons.add),
                             color: Colors.red,
                           ),
                         ),
@@ -75,7 +75,7 @@ class _ToDoListState extends State<ToDoList> {
                           onPressed: () {
                             context.goNamed('FormFields');
                           },
-                          icon: Icon(Icons.add),
+                          icon: const Icon(Icons.add),
                           focusColor: Colors.purple,
                           hoverColor: Colors.yellow,
                           splashColor: Colors.blue,
@@ -83,7 +83,7 @@ class _ToDoListState extends State<ToDoList> {
                           color: Colors.red,
                         ),
                       ),
-                      Text('ADD QUESTS'),
+                      const Text('ADD QUESTS'),
                     ],
                   ));
                 }

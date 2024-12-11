@@ -1,6 +1,6 @@
 part of 'to_do_bloc.dart';
 
-enum ToDoStatus { initial, success, failire, loading }
+enum ToDoStatus { initial, success, failure, loading }
 
 final class ToDoState extends Equatable {
   const ToDoState({
