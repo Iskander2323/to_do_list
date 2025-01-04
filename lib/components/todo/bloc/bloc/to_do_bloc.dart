@@ -22,16 +22,14 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
       if (state.status == ToDoStatus.initial) {
         final toDoItems = await _toDoRepository.getToDoAll();
         log(toDoItems.toString());
-        return emit(
-            state.copyWith(status: ToDoStatus.success, toDoItems: toDoItems));
+        emit(state.copyWith(status: ToDoStatus.success, toDoItems: toDoItems));
+      } else if (state.status == ToDoStatus.success) {
+        final toDoItems = await _toDoRepository.getToDoAll();
+        log(toDoItems.toString());
+        emit(state.copyWith(status: ToDoStatus.success, toDoItems: toDoItems));
       }
     } catch (e) {
       log(e.toString(), name: "FROM TODOBLOC");
     }
-  }
-
-  Future<void> _UpdateToDoStatus(
-      UpdateToDoStatus event, Emitter<ToDoState> emit) async {
-    try {} catch (e) {}
   }
 }
