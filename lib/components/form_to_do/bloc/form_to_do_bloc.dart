@@ -17,6 +17,7 @@ class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
     on<FormFieldsToDoEvent>(_formToDo);
     on<CreateToDoEvent>(_createToDo);
     on<ChangeDifficultyEvent>(_changeDifficulty);
+    on<UpdateToDoEvent>(_updateToDo);
   }
 
   Future<void> _formToDo(
@@ -38,7 +39,13 @@ class FormToDoBloc extends Bloc<FormToDoEvent, FormToDoState> {
 
   Future<void> _createToDo(
       CreateToDoEvent event, Emitter<FormToDoState> emit) async {
-    _toDoRepository.insertOrUpdate(event.toDoModel);
+    log(event.toDoModel.toString(), name: 'EVENT');
+    await _toDoRepository.insertToDo(event.toDoModel);
+  }
+
+  Future<void> _updateToDo(
+      UpdateToDoEvent event, Emitter<FormToDoState> emit) async {
+    await _toDoRepository.updateToDo(event.toDoModel);
   }
 
   Future<void> _changeDifficulty(
