@@ -3,8 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_project/components/form_to_do/bloc/form_to_do_bloc.dart';
-import 'package:test_project/components/todo/data/model/check_list_item_model.dart';
-import 'package:test_project/components/todo/data/model/remind_time_model.dart';
 import 'package:test_project/components/todo/data/model/todo_model.dart';
 
 class FormToDoFieldsPage extends StatefulWidget {
@@ -67,7 +65,28 @@ class _FormToDoFieldsPageState extends State<FormToDoFieldsPage> {
         ),
         actions: [
           TextButton(
-              onPressed: () {},
+              onPressed: () {
+                if (titleController.text.isNotEmpty) {
+                  final ToDoModel toDoModel = ToDoModel(
+                      id: widget.toDoModel.id,
+                      title: titleController.text,
+                      description: descriptionController.text.isNotEmpty
+                          ? descriptionController.text
+                          : '',
+                      checkList: [],
+                      isCompleted: widget.toDoModel.isCompleted,
+                      difficulty: (context.read<FormToDoBloc>().state
+                              as FormToDoEditableState)
+                          .chosenDifficulty,
+                      deadline: widget.toDoModel.deadline,
+                      remindersTimeList: [],
+                      createdTime: widget.toDoModel.createdTime);
+                  context
+                      .read<FormToDoBloc>()
+                      .add(CreateToDoEvent(toDoModel: toDoModel));
+                  Navigator.of(context).pop();
+                }
+              },
               child: const Text(
                 'CREATE',
                 style: TextStyle(color: Colors.white),
@@ -96,22 +115,32 @@ class _FormToDoFieldsPageState extends State<FormToDoFieldsPage> {
                           children: [
                             Container(
                               color: const Color.fromARGB(255, 58, 18, 83),
-                              child: TextField(
+                              child: TextFormField(
                                 controller: titleController,
                                 style: const TextStyle(
-                                    color: Color.fromARGB(255, 216, 142, 205)),
+                                  color: Color.fromARGB(255, 216, 142, 205),
+                                ),
                                 decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 5),
-                                    labelText: 'Task Title',
-                                    labelStyle: TextStyle(
-                                        color: Color.fromARGB(
-                                            255, 216, 142, 205))),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                  labelText: 'Task Title',
+                                  labelStyle: TextStyle(
+                                    color: Color.fromARGB(255, 216, 142, 205),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Task title cannot be empty';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             Container(
                               color: const Color.fromARGB(255, 58, 18, 83),
-                              child: TextField(
+                              child: TextFormField(
                                 controller: descriptionController,
                                 maxLines: null,
                                 minLines: 3,
@@ -119,15 +148,22 @@ class _FormToDoFieldsPageState extends State<FormToDoFieldsPage> {
                                   color: Color.fromARGB(255, 216, 142, 205),
                                 ),
                                 decoration: const InputDecoration(
-                                    contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    alignLabelWithHint: true,
-                                    labelText: 'Notes',
-                                    labelStyle: TextStyle(
-                                        color: Color.fromARGB(
-                                            255, 216, 142, 205))),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 10),
+                                  alignLabelWithHint: true,
+                                  labelText: 'Notes',
+                                  labelStyle: TextStyle(
+                                    color: Color.fromARGB(255, 216, 142, 205),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'This field cannot be empty';
+                                  }
+                                  return null;
+                                },
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
