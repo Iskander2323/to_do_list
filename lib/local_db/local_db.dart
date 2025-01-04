@@ -43,6 +43,24 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
+  // Future<List<ToDoModel>> getAllToDoItems() async {
+  //   var toDoItems = <TodoItem>[];
+  //   try {
+  //     toDoItems = await select(todoItems).get();
+  //   } on Exception catch (e) {
+  //     log(e.toString());
+  //   }
+  //   final result = <ToDoModel>[];
+  //   for (var toDoItem in toDoItems) {
+  //     final List<CheckListItemModel> checkList =
+  //         await getCheckList(toDoItem.id);
+  //     final List<RemindTimeModel> remindTimeList =
+  //         await getReminderTimeList(toDoItem.id);
+  //     result.add(ToDoModel.fromLocal(toDoItem, checkList, remindTimeList));
+  //   }
+  //   return result;
+  // }
+
   Future<List<ToDoModel>> getAllToDoItems() async {
     var toDoItems = <TodoItem>[];
     try {
@@ -52,11 +70,8 @@ class AppDatabase extends _$AppDatabase {
     }
     final result = <ToDoModel>[];
     for (var toDoItem in toDoItems) {
-      final List<CheckListItemModel> checkList =
-          await getCheckList(toDoItem.id);
-      final List<RemindTimeModel> remindTimeList =
-          await getReminderTimeList(toDoItem.id);
-      result.add(ToDoModel.fromLocal(toDoItem, checkList, remindTimeList));
+      log(toDoItem.toString());
+      result.add(ToDoModel.fromLocal(toDoItem, [], []));
     }
     return result;
   }
@@ -155,6 +170,37 @@ class AppDatabase extends _$AppDatabase {
           .write(TodoItemsCompanion(isCompleted: Value<bool>(isDone)));
     } on Exception catch (e) {
       log(e.toString(), name: 'FROM UPDATE TODOSTATUS');
+    }
+  }
+
+  Future<int?> insertToDo(TodoItemsCompanion toDoItemCompanion) async {
+    try {
+      final toDoRowId =
+          await database.into(todoItems).insert(toDoItemCompanion);
+      final newInsertedRowId = await (select(todoItems)
+            ..where((tbl) => tbl.id.equals(toDoRowId)))
+          .getSingle();
+
+      return newInsertedRowId.id;
+    } on Exception catch (e) {
+      log(e.toString(), name: 'INSERT TO DO');
+    }
+    return null;
+  }
+
+  Future<void> updateToDo(ToDoModel toDoModel) async {
+    try {
+      await (update(todoItems)..where((tbl) => tbl.id.equals(toDoModel.id)))
+          .write(TodoItemsCompanion(
+              title: Value(
+                toDoModel.title,
+              ),
+              description: Value(toDoModel.description),
+              difficulty: Value(toDoModel.difficulty),
+              isCompleted: Value(toDoModel.isCompleted),
+              deadLine: Value(toDoModel.deadline)));
+    } on Exception catch (e) {
+      log(e.toString(), name: 'UPDATE TO DO');
     }
   }
 

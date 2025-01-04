@@ -926,22 +926,243 @@ typedef $$TodoItemsTableUpdateCompanionBuilder = TodoItemsCompanion Function({
   Value<DateTime> createdTime,
 });
 
+final class $$TodoItemsTableReferences
+    extends BaseReferences<_$AppDatabase, $TodoItemsTable, TodoItem> {
+  $$TodoItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$ReminderTimeTable, List<ReminderTimeData>>
+      _reminderTimeRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.reminderTime,
+              aliasName: $_aliasNameGenerator(
+                  db.todoItems.id, db.reminderTime.toDoItemId));
+
+  $$ReminderTimeTableProcessedTableManager get reminderTimeRefs {
+    final manager = $$ReminderTimeTableTableManager($_db, $_db.reminderTime)
+        .filter((f) => f.toDoItemId.id($_item.id));
+
+    final cache = $_typedResult.readTableOrNull(_reminderTimeRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$CheckListTable, List<CheckListData>>
+      _checkListRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+          db.checkList,
+          aliasName:
+              $_aliasNameGenerator(db.todoItems.id, db.checkList.toDoItemId));
+
+  $$CheckListTableProcessedTableManager get checkListRefs {
+    final manager = $$CheckListTableTableManager($_db, $_db.checkList)
+        .filter((f) => f.toDoItemId.id($_item.id));
+
+    final cache = $_typedResult.readTableOrNull(_checkListRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$TodoItemsTableFilterComposer
+    extends Composer<_$AppDatabase, $TodoItemsTable> {
+  $$TodoItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<Difficulty, Difficulty, String>
+      get difficulty => $composableBuilder(
+          column: $table.difficulty,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<bool> get isCompleted => $composableBuilder(
+      column: $table.isCompleted, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get deadLine => $composableBuilder(
+      column: $table.deadLine, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdTime => $composableBuilder(
+      column: $table.createdTime, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> reminderTimeRefs(
+      Expression<bool> Function($$ReminderTimeTableFilterComposer f) f) {
+    final $$ReminderTimeTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.reminderTime,
+        getReferencedColumn: (t) => t.toDoItemId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ReminderTimeTableFilterComposer(
+              $db: $db,
+              $table: $db.reminderTime,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> checkListRefs(
+      Expression<bool> Function($$CheckListTableFilterComposer f) f) {
+    final $$CheckListTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.checkList,
+        getReferencedColumn: (t) => t.toDoItemId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CheckListTableFilterComposer(
+              $db: $db,
+              $table: $db.checkList,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$TodoItemsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TodoItemsTable> {
+  $$TodoItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get difficulty => $composableBuilder(
+      column: $table.difficulty, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isCompleted => $composableBuilder(
+      column: $table.isCompleted, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get deadLine => $composableBuilder(
+      column: $table.deadLine, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdTime => $composableBuilder(
+      column: $table.createdTime, builder: (column) => ColumnOrderings(column));
+}
+
+class $$TodoItemsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TodoItemsTable> {
+  $$TodoItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Difficulty, String> get difficulty =>
+      $composableBuilder(
+          column: $table.difficulty, builder: (column) => column);
+
+  GeneratedColumn<bool> get isCompleted => $composableBuilder(
+      column: $table.isCompleted, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deadLine =>
+      $composableBuilder(column: $table.deadLine, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdTime => $composableBuilder(
+      column: $table.createdTime, builder: (column) => column);
+
+  Expression<T> reminderTimeRefs<T extends Object>(
+      Expression<T> Function($$ReminderTimeTableAnnotationComposer a) f) {
+    final $$ReminderTimeTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.reminderTime,
+        getReferencedColumn: (t) => t.toDoItemId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ReminderTimeTableAnnotationComposer(
+              $db: $db,
+              $table: $db.reminderTime,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> checkListRefs<T extends Object>(
+      Expression<T> Function($$CheckListTableAnnotationComposer a) f) {
+    final $$CheckListTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.checkList,
+        getReferencedColumn: (t) => t.toDoItemId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CheckListTableAnnotationComposer(
+              $db: $db,
+              $table: $db.checkList,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
 class $$TodoItemsTableTableManager extends RootTableManager<
     _$AppDatabase,
     $TodoItemsTable,
     TodoItem,
     $$TodoItemsTableFilterComposer,
     $$TodoItemsTableOrderingComposer,
+    $$TodoItemsTableAnnotationComposer,
     $$TodoItemsTableCreateCompanionBuilder,
-    $$TodoItemsTableUpdateCompanionBuilder> {
+    $$TodoItemsTableUpdateCompanionBuilder,
+    (TodoItem, $$TodoItemsTableReferences),
+    TodoItem,
+    PrefetchHooks Function({bool reminderTimeRefs, bool checkListRefs})> {
   $$TodoItemsTableTableManager(_$AppDatabase db, $TodoItemsTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$TodoItemsTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$TodoItemsTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$TodoItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TodoItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TodoItemsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> title = const Value.absent(),
@@ -978,115 +1199,66 @@ class $$TodoItemsTableTableManager extends RootTableManager<
             deadLine: deadLine,
             createdTime: createdTime,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$TodoItemsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {reminderTimeRefs = false, checkListRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (reminderTimeRefs) db.reminderTime,
+                if (checkListRefs) db.checkList
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (reminderTimeRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$TodoItemsTableReferences
+                            ._reminderTimeRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$TodoItemsTableReferences(db, table, p0)
+                                .reminderTimeRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.toDoItemId == item.id),
+                        typedResults: items),
+                  if (checkListRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable:
+                            $$TodoItemsTableReferences._checkListRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$TodoItemsTableReferences(db, table, p0)
+                                .checkListRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.toDoItemId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
-class $$TodoItemsTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $TodoItemsTable> {
-  $$TodoItemsTableFilterComposer(super.$state);
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get title => $state.composableBuilder(
-      column: $state.table.title,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get description => $state.composableBuilder(
-      column: $state.table.description,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnWithTypeConverterFilters<Difficulty, Difficulty, String>
-      get difficulty => $state.composableBuilder(
-          column: $state.table.difficulty,
-          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
-              column,
-              joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get isCompleted => $state.composableBuilder(
-      column: $state.table.isCompleted,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<DateTime> get deadLine => $state.composableBuilder(
-      column: $state.table.deadLine,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<DateTime> get createdTime => $state.composableBuilder(
-      column: $state.table.createdTime,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ComposableFilter reminderTimeRefs(
-      ComposableFilter Function($$ReminderTimeTableFilterComposer f) f) {
-    final $$ReminderTimeTableFilterComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $state.db.reminderTime,
-        getReferencedColumn: (t) => t.toDoItemId,
-        builder: (joinBuilder, parentComposers) =>
-            $$ReminderTimeTableFilterComposer(ComposerState($state.db,
-                $state.db.reminderTime, joinBuilder, parentComposers)));
-    return f(composer);
-  }
-
-  ComposableFilter checkListRefs(
-      ComposableFilter Function($$CheckListTableFilterComposer f) f) {
-    final $$CheckListTableFilterComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $state.db.checkList,
-        getReferencedColumn: (t) => t.toDoItemId,
-        builder: (joinBuilder, parentComposers) =>
-            $$CheckListTableFilterComposer(ComposerState(
-                $state.db, $state.db.checkList, joinBuilder, parentComposers)));
-    return f(composer);
-  }
-}
-
-class $$TodoItemsTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $TodoItemsTable> {
-  $$TodoItemsTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get title => $state.composableBuilder(
-      column: $state.table.title,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get description => $state.composableBuilder(
-      column: $state.table.description,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get difficulty => $state.composableBuilder(
-      column: $state.table.difficulty,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get isCompleted => $state.composableBuilder(
-      column: $state.table.isCompleted,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<DateTime> get deadLine => $state.composableBuilder(
-      column: $state.table.deadLine,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<DateTime> get createdTime => $state.composableBuilder(
-      column: $state.table.createdTime,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
-
+typedef $$TodoItemsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $TodoItemsTable,
+    TodoItem,
+    $$TodoItemsTableFilterComposer,
+    $$TodoItemsTableOrderingComposer,
+    $$TodoItemsTableAnnotationComposer,
+    $$TodoItemsTableCreateCompanionBuilder,
+    $$TodoItemsTableUpdateCompanionBuilder,
+    (TodoItem, $$TodoItemsTableReferences),
+    TodoItem,
+    PrefetchHooks Function({bool reminderTimeRefs, bool checkListRefs})>;
 typedef $$ReminderTimeTableCreateCompanionBuilder = ReminderTimeCompanion
     Function({
   Value<int> id,
@@ -1100,22 +1272,154 @@ typedef $$ReminderTimeTableUpdateCompanionBuilder = ReminderTimeCompanion
   Value<DateTime> remindTime,
 });
 
+final class $$ReminderTimeTableReferences extends BaseReferences<_$AppDatabase,
+    $ReminderTimeTable, ReminderTimeData> {
+  $$ReminderTimeTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TodoItemsTable _toDoItemIdTable(_$AppDatabase db) =>
+      db.todoItems.createAlias(
+          $_aliasNameGenerator(db.reminderTime.toDoItemId, db.todoItems.id));
+
+  $$TodoItemsTableProcessedTableManager get toDoItemId {
+    final manager = $$TodoItemsTableTableManager($_db, $_db.todoItems)
+        .filter((f) => f.id($_item.toDoItemId!));
+    final item = $_typedResult.readTableOrNull(_toDoItemIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$ReminderTimeTableFilterComposer
+    extends Composer<_$AppDatabase, $ReminderTimeTable> {
+  $$ReminderTimeTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get remindTime => $composableBuilder(
+      column: $table.remindTime, builder: (column) => ColumnFilters(column));
+
+  $$TodoItemsTableFilterComposer get toDoItemId {
+    final $$TodoItemsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.toDoItemId,
+        referencedTable: $db.todoItems,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TodoItemsTableFilterComposer(
+              $db: $db,
+              $table: $db.todoItems,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ReminderTimeTableOrderingComposer
+    extends Composer<_$AppDatabase, $ReminderTimeTable> {
+  $$ReminderTimeTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get remindTime => $composableBuilder(
+      column: $table.remindTime, builder: (column) => ColumnOrderings(column));
+
+  $$TodoItemsTableOrderingComposer get toDoItemId {
+    final $$TodoItemsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.toDoItemId,
+        referencedTable: $db.todoItems,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TodoItemsTableOrderingComposer(
+              $db: $db,
+              $table: $db.todoItems,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ReminderTimeTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ReminderTimeTable> {
+  $$ReminderTimeTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get remindTime => $composableBuilder(
+      column: $table.remindTime, builder: (column) => column);
+
+  $$TodoItemsTableAnnotationComposer get toDoItemId {
+    final $$TodoItemsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.toDoItemId,
+        referencedTable: $db.todoItems,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TodoItemsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.todoItems,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
 class $$ReminderTimeTableTableManager extends RootTableManager<
     _$AppDatabase,
     $ReminderTimeTable,
     ReminderTimeData,
     $$ReminderTimeTableFilterComposer,
     $$ReminderTimeTableOrderingComposer,
+    $$ReminderTimeTableAnnotationComposer,
     $$ReminderTimeTableCreateCompanionBuilder,
-    $$ReminderTimeTableUpdateCompanionBuilder> {
+    $$ReminderTimeTableUpdateCompanionBuilder,
+    (ReminderTimeData, $$ReminderTimeTableReferences),
+    ReminderTimeData,
+    PrefetchHooks Function({bool toDoItemId})> {
   $$ReminderTimeTableTableManager(_$AppDatabase db, $ReminderTimeTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$ReminderTimeTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$ReminderTimeTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$ReminderTimeTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ReminderTimeTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ReminderTimeTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<int> toDoItemId = const Value.absent(),
@@ -1136,61 +1440,62 @@ class $$ReminderTimeTableTableManager extends RootTableManager<
             toDoItemId: toDoItemId,
             remindTime: remindTime,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$ReminderTimeTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({toDoItemId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (toDoItemId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.toDoItemId,
+                    referencedTable:
+                        $$ReminderTimeTableReferences._toDoItemIdTable(db),
+                    referencedColumn:
+                        $$ReminderTimeTableReferences._toDoItemIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ));
 }
 
-class $$ReminderTimeTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $ReminderTimeTable> {
-  $$ReminderTimeTableFilterComposer(super.$state);
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<DateTime> get remindTime => $state.composableBuilder(
-      column: $state.table.remindTime,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  $$TodoItemsTableFilterComposer get toDoItemId {
-    final $$TodoItemsTableFilterComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.toDoItemId,
-        referencedTable: $state.db.todoItems,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder, parentComposers) =>
-            $$TodoItemsTableFilterComposer(ComposerState(
-                $state.db, $state.db.todoItems, joinBuilder, parentComposers)));
-    return composer;
-  }
-}
-
-class $$ReminderTimeTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $ReminderTimeTable> {
-  $$ReminderTimeTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<DateTime> get remindTime => $state.composableBuilder(
-      column: $state.table.remindTime,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  $$TodoItemsTableOrderingComposer get toDoItemId {
-    final $$TodoItemsTableOrderingComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.toDoItemId,
-        referencedTable: $state.db.todoItems,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder, parentComposers) =>
-            $$TodoItemsTableOrderingComposer(ComposerState(
-                $state.db, $state.db.todoItems, joinBuilder, parentComposers)));
-    return composer;
-  }
-}
-
+typedef $$ReminderTimeTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $ReminderTimeTable,
+    ReminderTimeData,
+    $$ReminderTimeTableFilterComposer,
+    $$ReminderTimeTableOrderingComposer,
+    $$ReminderTimeTableAnnotationComposer,
+    $$ReminderTimeTableCreateCompanionBuilder,
+    $$ReminderTimeTableUpdateCompanionBuilder,
+    (ReminderTimeData, $$ReminderTimeTableReferences),
+    ReminderTimeData,
+    PrefetchHooks Function({bool toDoItemId})>;
 typedef $$CheckListTableCreateCompanionBuilder = CheckListCompanion Function({
   Value<int> id,
   required int toDoItemId,
@@ -1204,22 +1509,163 @@ typedef $$CheckListTableUpdateCompanionBuilder = CheckListCompanion Function({
   Value<bool> isCompleted,
 });
 
+final class $$CheckListTableReferences
+    extends BaseReferences<_$AppDatabase, $CheckListTable, CheckListData> {
+  $$CheckListTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TodoItemsTable _toDoItemIdTable(_$AppDatabase db) =>
+      db.todoItems.createAlias(
+          $_aliasNameGenerator(db.checkList.toDoItemId, db.todoItems.id));
+
+  $$TodoItemsTableProcessedTableManager get toDoItemId {
+    final manager = $$TodoItemsTableTableManager($_db, $_db.todoItems)
+        .filter((f) => f.id($_item.toDoItemId!));
+    final item = $_typedResult.readTableOrNull(_toDoItemIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$CheckListTableFilterComposer
+    extends Composer<_$AppDatabase, $CheckListTable> {
+  $$CheckListTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isCompleted => $composableBuilder(
+      column: $table.isCompleted, builder: (column) => ColumnFilters(column));
+
+  $$TodoItemsTableFilterComposer get toDoItemId {
+    final $$TodoItemsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.toDoItemId,
+        referencedTable: $db.todoItems,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TodoItemsTableFilterComposer(
+              $db: $db,
+              $table: $db.todoItems,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$CheckListTableOrderingComposer
+    extends Composer<_$AppDatabase, $CheckListTable> {
+  $$CheckListTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isCompleted => $composableBuilder(
+      column: $table.isCompleted, builder: (column) => ColumnOrderings(column));
+
+  $$TodoItemsTableOrderingComposer get toDoItemId {
+    final $$TodoItemsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.toDoItemId,
+        referencedTable: $db.todoItems,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TodoItemsTableOrderingComposer(
+              $db: $db,
+              $table: $db.todoItems,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$CheckListTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CheckListTable> {
+  $$CheckListTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<bool> get isCompleted => $composableBuilder(
+      column: $table.isCompleted, builder: (column) => column);
+
+  $$TodoItemsTableAnnotationComposer get toDoItemId {
+    final $$TodoItemsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.toDoItemId,
+        referencedTable: $db.todoItems,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TodoItemsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.todoItems,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
 class $$CheckListTableTableManager extends RootTableManager<
     _$AppDatabase,
     $CheckListTable,
     CheckListData,
     $$CheckListTableFilterComposer,
     $$CheckListTableOrderingComposer,
+    $$CheckListTableAnnotationComposer,
     $$CheckListTableCreateCompanionBuilder,
-    $$CheckListTableUpdateCompanionBuilder> {
+    $$CheckListTableUpdateCompanionBuilder,
+    (CheckListData, $$CheckListTableReferences),
+    CheckListData,
+    PrefetchHooks Function({bool toDoItemId})> {
   $$CheckListTableTableManager(_$AppDatabase db, $CheckListTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$CheckListTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$CheckListTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$CheckListTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CheckListTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CheckListTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<int> toDoItemId = const Value.absent(),
@@ -1244,70 +1690,62 @@ class $$CheckListTableTableManager extends RootTableManager<
             title: title,
             isCompleted: isCompleted,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$CheckListTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({toDoItemId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (toDoItemId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.toDoItemId,
+                    referencedTable:
+                        $$CheckListTableReferences._toDoItemIdTable(db),
+                    referencedColumn:
+                        $$CheckListTableReferences._toDoItemIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ));
 }
 
-class $$CheckListTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $CheckListTable> {
-  $$CheckListTableFilterComposer(super.$state);
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get title => $state.composableBuilder(
-      column: $state.table.title,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get isCompleted => $state.composableBuilder(
-      column: $state.table.isCompleted,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  $$TodoItemsTableFilterComposer get toDoItemId {
-    final $$TodoItemsTableFilterComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.toDoItemId,
-        referencedTable: $state.db.todoItems,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder, parentComposers) =>
-            $$TodoItemsTableFilterComposer(ComposerState(
-                $state.db, $state.db.todoItems, joinBuilder, parentComposers)));
-    return composer;
-  }
-}
-
-class $$CheckListTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $CheckListTable> {
-  $$CheckListTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get title => $state.composableBuilder(
-      column: $state.table.title,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get isCompleted => $state.composableBuilder(
-      column: $state.table.isCompleted,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  $$TodoItemsTableOrderingComposer get toDoItemId {
-    final $$TodoItemsTableOrderingComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.toDoItemId,
-        referencedTable: $state.db.todoItems,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder, parentComposers) =>
-            $$TodoItemsTableOrderingComposer(ComposerState(
-                $state.db, $state.db.todoItems, joinBuilder, parentComposers)));
-    return composer;
-  }
-}
+typedef $$CheckListTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CheckListTable,
+    CheckListData,
+    $$CheckListTableFilterComposer,
+    $$CheckListTableOrderingComposer,
+    $$CheckListTableAnnotationComposer,
+    $$CheckListTableCreateCompanionBuilder,
+    $$CheckListTableUpdateCompanionBuilder,
+    (CheckListData, $$CheckListTableReferences),
+    CheckListData,
+    PrefetchHooks Function({bool toDoItemId})>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
