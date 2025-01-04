@@ -20,79 +20,79 @@ class _ToDoListState extends State<ToDoList> {
         backgroundColor: const Color.fromARGB(255, 3, 208, 109),
         title: const Text('RealLifeRPG'),
       ),
-      body: LayoutBuilder(
-        builder: (context, contrains) {
-          return BlocBuilder<ToDoBloc, ToDoState>(builder: (context, state) {
-            switch (state.status) {
-              case ToDoStatus.initial:
-                return const CircularProgressIndicator();
-              case ToDoStatus.loading:
-                return const CircularProgressIndicator();
-              case ToDoStatus.failure:
-                return const Center(child: Text('ERROR'));
-              case ToDoStatus.success:
-                if (state.toDoItems.isNotEmpty) {
-                  final body = Container(
-                    width: contrains.maxWidth,
-                    height: contrains.maxHeight,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: IconButton(
-                            onPressed: () {
-                              context.goNamed('FormFields');
-                            },
-                            icon: const Icon(Icons.add),
-                            color: Colors.red,
-                          ),
-                        ),
-                        SizedBox(
-                          width: contrains.maxWidth,
-                          height: contrains.maxHeight * 0.5,
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              return ToDoItem(todoItem: state.toDoItems[index]);
-                            },
-                            itemCount: state.toDoItems.length,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                  return body;
-                } else {
-                  return Container(
-                      child: Column(
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: IconButton(
-                          onPressed: () {
-                            context.goNamed('FormFields');
-                          },
-                          icon: const Icon(Icons.add),
-                          focusColor: Colors.purple,
-                          hoverColor: Colors.yellow,
-                          splashColor: Colors.blue,
-                          highlightColor: Colors.green,
-                          color: Colors.red,
-                        ),
+      body: SingleChildScrollView(
+          child: BlocBuilder<ToDoBloc, ToDoState>(builder: (context, state) {
+        switch (state.status) {
+          case ToDoStatus.initial:
+            return const CircularProgressIndicator();
+          case ToDoStatus.loading:
+            return const CircularProgressIndicator();
+          case ToDoStatus.failure:
+            return const Center(child: Text('ERROR'));
+          case ToDoStatus.success:
+            if (state.toDoItems.isNotEmpty) {
+              final body = Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: IconButton(
+                        onPressed: () {
+                          context.goNamed('FormFields');
+                        },
+                        icon: const Icon(Icons.add),
+                        color: Colors.red,
                       ),
-                      const Text('ADD QUESTS'),
-                    ],
-                  ));
-                }
-              default:
-                return const Center(child: Text('ERROR'));
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return ToDoItem(todoItem: state.toDoItems[index]);
+                        },
+                        itemCount: state.toDoItems.length,
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          context.read<ToDoBloc>().add(ToDoFetched());
+                        },
+                        icon: Icon(Icons.refresh))
+                  ],
+                ),
+              );
+              return body;
+            } else {
+              return Container(
+                  child: Column(
+                children: [
+                  SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: IconButton(
+                      onPressed: () {
+                        context.goNamed('FormFields');
+                      },
+                      icon: const Icon(Icons.add),
+                      focusColor: Colors.purple,
+                      hoverColor: Colors.yellow,
+                      splashColor: Colors.blue,
+                      highlightColor: Colors.green,
+                      color: Colors.red,
+                    ),
+                  ),
+                  const Text('ADD QUESTS'),
+                ],
+              ));
             }
-          });
-        },
-      ),
+        }
+      })),
     );
   }
 }
