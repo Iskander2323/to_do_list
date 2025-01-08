@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:test_project/components/todo/data/model/todo_model.dart';
 import 'package:test_project/local_db/globals.dart';
-import 'package:test_project/local_db/local_db.dart';
 
 class TodoRepository {
   final StreamController<ToDoModel> _newCreatedToDoStreamController =
@@ -18,6 +17,10 @@ class TodoRepository {
   Future<ToDoModel?> getToDoById(int id) async {
     final ToDoModel? toDoModel = await database.getToDoById(id);
     return toDoModel;
+  }
+
+  Future<void> updateToDoStatus(int id, bool isCompleted) async {
+    await database.updateToDoStatus(id, isCompleted);
   }
 
   Future<void> insertToDo(ToDoModel toDo) async {

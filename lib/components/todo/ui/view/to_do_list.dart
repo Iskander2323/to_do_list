@@ -24,9 +24,9 @@ class _ToDoListState extends State<ToDoList> {
           child: BlocBuilder<ToDoBloc, ToDoState>(builder: (context, state) {
         switch (state.status) {
           case ToDoStatus.initial:
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           case ToDoStatus.loading:
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           case ToDoStatus.failure:
             return const Center(child: Text('ERROR'));
           case ToDoStatus.success:

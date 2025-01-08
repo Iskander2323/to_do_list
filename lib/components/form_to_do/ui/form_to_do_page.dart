@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_project/components/form_to_do/bloc/form_to_do_bloc.dart';
@@ -36,11 +34,6 @@ class _FormToDoPageState extends State<FormToDoPage> {
           case FormToDoStatus.failure:
             return const Center(
               child: Text('ERROR SOMETHING WENT WRONG FAILURE'),
-            );
-
-          default:
-            return const Center(
-              child: Text('ERROR SOMETHING WENT WRONG DEFAULT'),
             );
         }
       } else {

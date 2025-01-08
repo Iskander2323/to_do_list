@@ -201,18 +201,12 @@ class _FormToDoFieldsPageState extends State<FormToDoFieldsPage> {
                                                 'Trivial',
                                                 (state as FormToDoEditableState)
                                                     .chosenDifficulty),
-                                            diffucultyButton(
-                                                'Easy',
-                                                (state as FormToDoEditableState)
-                                                    .chosenDifficulty),
-                                            diffucultyButton(
-                                                'Medium',
-                                                (state as FormToDoEditableState)
-                                                    .chosenDifficulty),
-                                            diffucultyButton(
-                                                'Hard',
-                                                (state as FormToDoEditableState)
-                                                    .chosenDifficulty),
+                                            diffucultyButton('Easy',
+                                                (state).chosenDifficulty),
+                                            diffucultyButton('Medium',
+                                                (state).chosenDifficulty),
+                                            diffucultyButton('Hard',
+                                                (state).chosenDifficulty),
                                           ],
                                         ),
                                       ],

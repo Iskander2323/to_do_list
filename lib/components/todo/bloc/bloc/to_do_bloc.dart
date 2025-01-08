@@ -14,6 +14,7 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
       : _toDoRepository = toDoRepository,
         super(const ToDoState(status: ToDoStatus.initial)) {
     on<ToDoFetched>(_onToDoFetched);
+    on<UpdateToDoStatus>(_updateToDoStatus);
   }
 
   Future<void> _onToDoFetched(
@@ -35,5 +36,18 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
     } catch (e) {
       log(e.toString(), name: "FROM TODOBLOC");
     }
+  }
+
+  Future<void> _updateToDoStatus(
+      UpdateToDoStatus event, Emitter<ToDoState> emit) async {
+    await _toDoRepository.updateToDoStatus(event.toDoId, event.isCompleted);
+
+    final updatedList = state.toDoItems.map((toDo) {
+      if (toDo.id == event.toDoId) {
+        return toDo.copyWith(isCompleted: event.isCompleted);
+      }
+      return toDo;
+    }).toList();
+    emit(state.copyWith(toDoItems: updatedList));
   }
 }

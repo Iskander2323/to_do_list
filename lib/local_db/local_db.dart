@@ -164,10 +164,10 @@ class AppDatabase extends _$AppDatabase {
     return null;
   }
 
-  Future<void> updateToDoStatus(int id, bool isDone) async {
+  Future<void> updateToDoStatus(int id, bool isCompleted) async {
     try {
       await (update(todoItems)..where((tbl) => tbl.id.equals(id)))
-          .write(TodoItemsCompanion(isCompleted: Value<bool>(isDone)));
+          .write(TodoItemsCompanion(isCompleted: Value<bool>(isCompleted)));
     } on Exception catch (e) {
       log(e.toString(), name: 'FROM UPDATE TODOSTATUS');
     }
@@ -201,31 +201,6 @@ class AppDatabase extends _$AppDatabase {
               deadLine: Value(toDoModel.deadline)));
     } on Exception catch (e) {
       log(e.toString(), name: 'UPDATE TO DO');
-    }
-  }
-
-  Future<void> insertOrUpdateToDo(TodoItemsCompanion toDoItemCompanion) async {
-    try {
-      final isRecordExist = await (select(todoItems)
-            ..where((tbl) => tbl.id.equals(toDoItemCompanion.id.value)))
-          .getSingleOrNull();
-      if (isRecordExist == null) {
-        try {
-          await database.into(todoItems).insert(toDoItemCompanion);
-        } on Exception catch (e) {
-          log(e.toString());
-        }
-      } else {
-        try {
-          await (update(todoItems)
-                ..where((tbl) => tbl.id.equals(toDoItemCompanion.id.value)))
-              .write(toDoItemCompanion);
-        } on Exception catch (e) {
-          log(e.toString(), name: 'FROM UPDATE TODO');
-        }
-      }
-    } on Exception catch (e) {
-      log(e.toString(), name: 'FROM INSERT TODO');
     }
   }
 
