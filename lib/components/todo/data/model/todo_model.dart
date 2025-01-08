@@ -65,6 +65,29 @@ class ToDoModel extends Equatable {
     );
   }
 
+  ToDoModel copyWith({
+    int? id,
+    String? title,
+    String? description,
+    List<CheckListItemModel>? checkList,
+    Difficulty? difficulty,
+    bool? isCompleted,
+    DateTime? deadline,
+    List<RemindTimeModel>? remindersTimeList,
+    DateTime? createdTime,
+  }) {
+    return ToDoModel(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        checkList: checkList ?? this.checkList,
+        difficulty: difficulty ?? this.difficulty,
+        isCompleted: isCompleted ?? this.isCompleted,
+        deadline: deadline ?? this.deadline,
+        remindersTimeList: remindersTimeList ?? this.remindersTimeList,
+        createdTime: createdTime ?? this.createdTime);
+  }
+
   final int id;
   final String title;
   final String? description;
